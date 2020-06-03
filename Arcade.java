@@ -8,6 +8,8 @@ java -cp ".;bucleJuego.jar" Arcade
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -17,7 +19,7 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
   JGame juego;
   Thread hilo;
   
-
+  private JButton boton,botonConfig;
   private JFrame miframe;
   private JPanel mipanel,imagenes,score;
   GridBagLayout gbl=new GridBagLayout();
@@ -28,7 +30,7 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
 
   public Arcade(){
     miframe = new JFrame("PRUEBA");
-    miframe.setSize(640, 480);
+    miframe.setSize(1024, 768);
     miframe.setVisible(true);
     miframe.setLocationRelativeTo(null);
     miframe.setLayout(new BorderLayout());
@@ -65,10 +67,13 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
     imagenes.setBackground(Color.RED);
     cardLayout = new  CardLayout();
     imagenes.setLayout(cardLayout);
-    imagenes.add(contenedores[0],new JLabel(new ImageIcon("C:\\Users\\avita\\OneDrive\\Escritorio\\PROYECTO FINAL BOMBERMAN\\repositorio\\Arcade\\Recursos\\Imagenes/imagen1.jpeg")));
-    imagenes.add(contenedores[1],new JLabel(new ImageIcon("C:\\Users\\avita\\OneDrive\\Escritorio\\PROYECTO FINAL BOMBERMAN\\repositorio\\Arcade\\Recursos\\Imagenes/imagen211.png")));
-    imagenes.add(contenedores[2],new JLabel(new ImageIcon("C:\\Users\\avita\\OneDrive\\Escritorio\\PROYECTO FINAL BOMBERMAN\\repositorio\\Arcade\\Recursos\\Imagenes/imagen3.jpeg")));
-
+    
+    //Try and catch
+      
+      imagenes.add(contenedores[0],new JLabel(new ImageIcon("Recursos/Imagenes/imagen1.jpeg")));
+      imagenes.add(contenedores[1],new JLabel(new ImageIcon("Recursos/Imagenes/imagen211.png")));
+      imagenes.add(contenedores[2],new JLabel(new ImageIcon("Recursos/Imagenes/imagen3.jpeg")));
+      
 
     score = new JPanel();
     score.setBackground(Color.GREEN);
@@ -81,7 +86,7 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
     gbc.fill = GridBagConstraints.BOTH;
     mipanel.add(score,gbc); 
 
-    JButton boton = new JButton("Jugar");
+    boton = new JButton("Jugar");
     boton.addActionListener(this);
     gbc.gridx = 1;
     gbc.gridy = 2;
@@ -91,8 +96,16 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
     gbc.weighty = 0.0;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     mipanel.add(boton, gbc);
+
+    botonConfig = new JButton("Configuracion");
+    botonConfig.addActionListener(this);
+    gbc.gridx = 1;
+    gbc.gridy = 3;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    mipanel.add(botonConfig, gbc);
+
         
-  miframe.add(mipanel);
+    miframe.add(mipanel);
 
         miframe.addWindowListener(new WindowAdapter(){
             public void windowClosing(WindowEvent windowEvent){
@@ -108,7 +121,7 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
     // Button boton=new Button("Bomberman");
     // boton.addActionListener(this);
     // this.add(boton);
-    
+    miframe.pack();
   }
   
   public void actionPerformed(ActionEvent e){
@@ -127,7 +140,22 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
      };
      hilo.start();
     }
+    
+    if (e.getActionCommand().equals("Configuracion")){
+      JDialog jd = new JDialog();
+      jd.setSize(800,600);
+      jd.setVisible(true);
+			//jd.setModal(true);
+			jd.setLayout(new BorderLayout());
+			Configuration settings = new Configuration();
+      jd.add(settings);
+      
+    }
 
+    /*
+    if boton de configuracion, abrir una ventana de configuracion en donde se puedan modificar los valores por defecto. 
+    Se deberia modificar el archivo jgame.properties 
+    */
   }
 
 

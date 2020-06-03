@@ -22,39 +22,42 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 
+//Menu del Juego, donde se puede seleccionar jugar o configuraciones.
 public class Bomberman extends JGame {
-    //Scene
-    //sonido
-    //reloj?
-    //fondo
-    //camara
-    Heroe heroe;
-    Mundo mundo;
-    //Date // para el tiempo de juego
-    Fondo img_fondo;
+    private int x = 1024;
+    private int y = 768;
+
+    
+    private BufferedImage fondo=null;
+    private BufferedImage logo=null;
+
 
     public Bomberman() {
-        super("Bomberman", 800, 600);
+        super("Bomberman", 1024, 768);
+
         System.out.println(appProperties.stringPropertyNames());
     }
 
     public void gameStartup() {
-        try{
-            img_fondo = new Fondo("Recursos/Imagenes/Fondo.png");
-            heroe = new Heroe("recursos/imagenes/geometry-01.png");
+        /*try{
+         
         }
         catch(Exception e){}
-
+        */
     }
     public void gameUpdate(double delta) {}
+    
     public void gameDraw(Graphics2D g) {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        Mundo mundo = Mundo.getInstance();
-        
-        img_fondo.display(g);
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial",Font.ITALIC,25));
+        g.drawString("START GAME",this.x/2,this.y/2);
+        //g.drawString("RANKING",this.x/2,this.y/2+this.getHeight()/10+this.getHeight()/100);
+        g.drawString("CONFIGURATION",this.x/2,this.y/2+2*this.getHeight()/10+2*this.getHeight()/100);
+        //.drawString("HELP",this.x/2,this.y/2+3*this.getHeight()/10+3*this.getHeight()/100);
+        g.drawString("EXIT",this.x/2,this.y/2+4*this.getHeight()/10+4*this.getHeight()/100);
 
     }
     public void gameShutdown() {}
-
 }

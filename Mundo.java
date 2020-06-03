@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.geom.*;
 
+
+//Scena donde se desarrola el Gameplay 
 public class Mundo {
     private static final int ANCHO_MUNDO=640*13;
     private static final int ALTO_MUNDO=480;
