@@ -28,11 +28,13 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
   private JList<String> myList;
   String[] contenedores={"pacman","Bomberman","street fighter"};
   CardLayout cardLayout;
+  boolean BombermanFlag=false;
 
   public Arcade(){
     miframe = new JFrame("ARCADE");
     miframe.setSize(1024, 768);
     miframe.setVisible(true);
+    
     miframe.setLocationRelativeTo(null);
     miframe.setLayout(new BorderLayout());
 
@@ -108,11 +110,12 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
         
     miframe.add(mipanel);
 
-        miframe.addWindowListener(new WindowAdapter(){
-            public void windowClosing(WindowEvent windowEvent){
-                        System.exit(0);
-            }        
-        });
+  miframe.addWindowListener(new WindowAdapter(){
+    public void windowClosing(WindowEvent windowEvent){
+        System.exit(0);
+      }        
+  });
+
     //this.setLayout(new GridLayout(0,2));
     /*
       Armar la ventana del arcade
@@ -131,7 +134,7 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
       run() para el juego
     */
     //Escucho el boton y runeo el Bomberman
-    if (e.getActionCommand().equals("Jugar")){
+    if (e.getActionCommand().equals("Jugar") && BombermanFlag==true){
       juego = new Bomberman();
 
      hilo = new Thread() {
@@ -164,6 +167,10 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
   public void valueChanged(ListSelectionEvent e) {
     // TODO Auto-generated method stub
     cardLayout.show(imagenes, myList.getSelectedValue());
+    if (myList.getSelectedValue() == "Bomberman"){
+        BombermanFlag = true;
+    }else 
+      BombermanFlag = false;
   }
 
 
