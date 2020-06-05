@@ -29,7 +29,15 @@ public class Bomberman extends JGame {
 
     
     private BufferedImage fondo=null;
-    private BufferedImage logo=null;
+    private BufferedImage logo=null; 
+
+    private Heroe hero;
+    private Fondo background;
+    private Vector<Fantasma> vecGhost;
+    private Vector<Pared> vecPared;
+    private Puerta door;
+
+
 
 
     public Bomberman() {
@@ -39,6 +47,19 @@ public class Bomberman extends JGame {
     }
 
     public void gameStartup() {
+        
+        background = new Fondo();
+        
+        hero = new Heroe();
+        hero.setImagen(ImageIO.read(getClass().getResource("Recursos/Imagenes/Heroe.jpg")));
+        hero.setPosition(getWidth() / 2,getHeight() / 2 ); // setear poscicion de inicio
+        
+       
+        vecGhost = new Vector<Fantasma>();
+        vecPared = new Vector<Pared>();
+
+
+
         /*try{
          
         }
@@ -48,6 +69,7 @@ public class Bomberman extends JGame {
     public void gameUpdate(double delta) {}
     
     public void gameDraw(Graphics2D g) {
+        
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         g.setColor(Color.WHITE);
