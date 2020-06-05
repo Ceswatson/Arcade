@@ -1,5 +1,5 @@
-public class Fantasma implements ObjetoMovible {
-    public void update(double delta){};
-	public double getX(){};
-	public double getY(){};
+public class Fantasma extends ObjetoGrafico implements ObjetoMovible {
+	public Fantasma(String filename) {
+        super (filename);
+    }
 }

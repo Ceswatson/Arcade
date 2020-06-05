@@ -7,9 +7,8 @@ import java.io.*;
 
 public class Pared extends ObjetoGrafico {
 
-    public Pared() {
-
-
+    public Pared(String filename) {
+        super (filename);
     }
 
 }

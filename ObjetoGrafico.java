@@ -29,6 +29,8 @@ public class ObjetoGrafico {
 		return imagen.getHeight();
 	}
 
+	
+
 	public void setPosition(int x,int y){
 		this.positionX = x;
 		this.positionY = y;
@@ -45,4 +47,9 @@ public class ObjetoGrafico {
 	public double getY(){
 		return positionY;
 	}
+	
+	//Para las colisiones --- se pide un cuadrado en la posicion donde se cuentra el objeto
+	public Rectangle2D getPosicion(){
+        return new Rectangle2D.Double(positionX, positionY,30,30);
+    }
 }

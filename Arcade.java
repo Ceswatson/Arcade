@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -24,12 +25,12 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
   private JPanel mipanel,imagenes,score;
   GridBagLayout gbl=new GridBagLayout();
   GridBagConstraints gbc=new GridBagConstraints();
-  private JList<String> mylList;
+  private JList<String> myList;
   String[] contenedores={"pacman","Bomberman","street fighter"};
   CardLayout cardLayout;
 
   public Arcade(){
-    miframe = new JFrame("PRUEBA");
+    miframe = new JFrame("ARCADE");
     miframe.setSize(1024, 768);
     miframe.setVisible(true);
     miframe.setLocationRelativeTo(null);
@@ -41,9 +42,9 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
 
     gbc.insets = new Insets(5,5,5,40);
 
-    mylList = new JList<>(contenedores);
-    mylList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    mylList.addListSelectionListener(this);
+    myList = new JList<>(contenedores);
+    myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    myList.addListSelectionListener(this);
     
     gbc.gridx = 0;
     gbc.gridy = 0;
@@ -53,7 +54,7 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
     gbc.weighty = 1.25;
     gbc.fill = GridBagConstraints.VERTICAL;
     gbc.anchor = GridBagConstraints.WEST;
-    mipanel.add(mylList, gbc);
+    mipanel.add(myList, gbc);
 
     imagenes = new JPanel();
     gbc.gridx = 1;
@@ -162,7 +163,7 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
 
   public void valueChanged(ListSelectionEvent e) {
     // TODO Auto-generated method stub
-    cardLayout.show(imagenes, mylList.getSelectedValue());
+    cardLayout.show(imagenes, myList.getSelectedValue());
   }
 
 

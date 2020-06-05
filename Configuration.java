@@ -92,9 +92,7 @@ public class Configuration  extends JPanel implements ActionListener  {
 				FileOutputStream out = new FileOutputStream(fileProperties);
 				gameproperties.store(out, null);
 				out.close();
-			} catch (Exception e) {
-
-			}
+			} catch (Exception e) {}
 			/*
 			Bomberman juego = new Bomberman();
         	t=new Thread(){
@@ -102,15 +100,15 @@ public class Configuration  extends JPanel implements ActionListener  {
         	juego.run(1.0/60.0);}
         	};
         	t.start();
-			}
 			*/
+		}
+		
 		// los acmbios
 		if (evt.getActionCommand() == "Reset") {
 			for (int i = 0; i < nameLabel.length; i++)
 				button[i].setSelected(false);
 			button[5].setSelected(false);
 		}
-
 		if (evt.getActionCommand() == "Controls") {
 			JDialog jd = new JDialog();
 			JTextField keyRight, keyLeft, keyShooting;
@@ -168,10 +166,10 @@ public class Configuration  extends JPanel implements ActionListener  {
 			SHOOTING.addKeyListener(listener);
 			jd.setSize(400, 200);
 			jd.setVisible(true);
-
 		}
 	}
-	protected void readPropertiesFile() {
+	
+	public void readPropertiesFile() {
 
 		try {
 			FileInputStream in = new FileInputStream(fileProperties);
@@ -181,7 +179,5 @@ public class Configuration  extends JPanel implements ActionListener  {
 			System.out.println("Error en metodo  readPropertiesFile(): " + e);
 		}
 
-	}
-
-	
+	}	
 }
