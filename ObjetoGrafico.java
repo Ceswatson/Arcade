@@ -11,6 +11,10 @@ public class ObjetoGrafico {
 	double positionX = 0;
 	double positionY = 0;
 	
+	/*
+	public ObjetoGrafico() {
+
+	} */
     public ObjetoGrafico(String filename) {
 		try {
 			//System.out.println(filename+" +>"+this.getClass().getResource(filename).getPath());
@@ -29,7 +33,9 @@ public class ObjetoGrafico {
 		return imagen.getHeight();
 	}
 
-	
+	public void setImagen(final BufferedImage img){
+        this.imagen=img;
+    }
 
 	public void setPosition(int x,int y){
 		this.positionX = x;

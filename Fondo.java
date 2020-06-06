@@ -1,14 +1,26 @@
-import java.awt.*;
-import java.awt.geom.*;
-
 import java.awt.image.*;
+import java.io.IOException;
+
 import javax.imageio.*;
-import java.io.*;
-import java.net.*; //nuevo para sonido
+
+//1024 x 416
 
 public class Fondo extends ObjetoGrafico {
-    public Fondo(String filename) {
+
+	//BufferedImage imagen = null;
+	public Fondo(String filename) {
 		super(filename);
-		setPosition(0,0); // El fondo es una imagen estatica, pero muy grande
+		
 	}
+
+	/*	
+	public Fondo() throws IOException {
+		try {
+		imagen = ImageIO.read(getClass().getResource("Recursos/Imagenes/fondo-verde.jpg"));
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	*/
+
 }

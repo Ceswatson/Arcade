@@ -15,35 +15,24 @@ import java.net.*; //nuevo para sonido
 
 public class Heroe extends ObjetoGrafico implements ObjetoMovible {
 
+    BufferedImage imagen = null;
+    //private final Rectangle2D posicion = new Rectangle2D.Double();
 
-	BufferedImage imagen=null;
-	private Rectangle2D posicion  = new Rectangle2D.Double();
-
-	public Heroe(String filename){ 
-        super (filename);
+    public Heroe() {
+        super("Recursos/Imagenes/Heroe.png");
 	}
 
-	public void setImagen(BufferedImage img){
-        this.imagen=img;
-    }
-
-    public void setX(double x){
+    public void setX(final double x){
         positionX=x;
     }
-    public void setY(double y){
+    public void setY(final double y){
         positionY=y;
     }
-    public double getX(){
-        return posicion.getX(); 
-    }
-    public double getY(){
-        return posicion.getY(); 
-    }
 
-	public void update(double delta) {
+	public void update(final double delta) {
 	
 	}
-	public void draw(Graphics2D g){
-        g.drawImage(imagen,(int)posicion.getX(),(int)posicion.getY(),null);
+	public void draw(final Graphics2D g){
+        g.drawImage(imagen,(int)getX(),(int)getY(),null);
     }
 }

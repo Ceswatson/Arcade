@@ -29,8 +29,8 @@ import java.util.Date;
 
 //Menu del Juego, donde se puede seleccionar jugar
 public class Bomberman extends JGame {
-    private int x = 1024;
-    private int y = 768;
+    private int x = 480;
+    private int y = 480;
 
     
     //private BufferedImage fondo=null;
@@ -38,35 +38,44 @@ public class Bomberman extends JGame {
 
     private Heroe hero;
     private Fondo background;
+    private Fondo gris;
     private Vector<Fantasma> vecGhost;
-    //private Vector<Pared> vecPared;
+    private Vector<Pared> vecParedes;
     private Puerta door;
 
 
 
-    final double HEROE_DESPLAZAMIENTO=150.0;
+    final double HEROE_DESPLAZAMIENTO=50.0;
 
     public Bomberman() {
-        super("Bomberman", 1024, 768);
+        super("Bomberman", 480, 480);
 
         System.out.println(appProperties.stringPropertyNames());
     }
 
     public void gameStartup() {
         
-        background = new Fondo("Recursos/Imagenes/Fondo.png");
-        try{
+        gris = new Fondo("Recursos/Imagenes/FondoGris.png");
+        gris.setPosition(0,32);
 
-        hero = new Heroe("Recursos/Imagenes/Heroe.jpg");
-        hero.setImagen(ImageIO.read(getClass().getResource("Recursos/Imagenes/heroe.jpg")));
-        hero.setPosition(getWidth() / 2,getHeight() / 2 ); // setear poscicion de inicio
+        background = new Fondo("Recursos/Imagenes/Fondo.png");
+        background.setPosition(0, 96);
+
+        hero = new Heroe();
+        hero.setPosition(64,128);
+
+        door = new Puerta();
         
-        //vecGhost = new Vector<Fantasma>();
-        //vecPared = new Vector<Pared>();
-    
+        vecParedes = new Vector<Pared>();
+        vecParedes.addElement(new ParedPiedra(0,96));
+        
+        for(int i=0;i<10;i++){
 
         }
-        catch(Exception e){}
+        
+        
+        //vecGhost = new Vector<Fantasma>();
+       
     }
     public void gameUpdate(double delta) {
         Keyboard keyboard = this.getKeyboard();
@@ -94,16 +103,32 @@ public class Bomberman extends JGame {
     }
     
     public void gameDraw(Graphics2D g) {
-    
+        
+        g.setBackground(Color.GRAY); // No anda no se que onda
+
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        gris.display(g);
         background.display(g);
         hero.display(g);
+
+        for(int i=0;i<vecParedes.size();i++){
+            vecParedes.elementAt(i).display(g);
+        }
+
+        /*
+        for(int i=0;i<elem_block.size();i++){
+          elem_block.elementAt(i).draw(g);
+        }
+      */
+
     }   
     public void gameShutdown() {}
 
   
     /*
     public boolean colision(){
+
         //Colision heroe rectangulo de juego
         //Colision heroe Pared
         //Colision heroe bomba (sin explotar)

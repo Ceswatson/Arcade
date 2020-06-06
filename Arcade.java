@@ -26,7 +26,7 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
   GridBagLayout gbl=new GridBagLayout();
   GridBagConstraints gbc=new GridBagConstraints();
   private JList<String> myList;
-  String[] contenedores={"pacman","Bomberman","street fighter"};
+  String[] contenedores={"Pacman","Bomberman","Street Fighter"};
   CardLayout cardLayout;
   boolean BombermanFlag=false;
 
