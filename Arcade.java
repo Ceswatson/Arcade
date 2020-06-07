@@ -146,13 +146,22 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
     }
     
     if (e.getActionCommand().equals("Configuracion")){
-      JDialog jd = new JDialog();
-      jd.setSize(800,600);
-      jd.setVisible(true);
-			//jd.setModal(true);
-			jd.setLayout(new BorderLayout());
-			Configuration settings = new Configuration();
-      jd.add(settings);
+      
+      Configuration settings = new Configuration();
+      JFrame fconfig = new JFrame();
+      fconfig.add(settings);
+      fconfig.setSize(1024,780);
+      fconfig.setVisible(true);
+      fconfig.setLocationRelativeTo(null);
+
+      JDialog jd = new JDialog(fconfig, "configuraciones");
+      
+      // jd.setSize(800,600);
+      // jd.setVisible(true);
+			// //jd.setModal(true);
+			// jd.setLayout(new BorderLayout());
+      // Configuration settings = new Configuration();
+      // jd.add(settings,"CONFIGURACION");
       
     }
 

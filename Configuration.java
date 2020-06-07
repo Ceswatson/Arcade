@@ -1,4 +1,4 @@
-import com.entropyinteractive.JGame;
+import com.entropyinteractive.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -17,7 +17,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 public class Configuration  extends JPanel implements ActionListener  {
-	private String nameLabel[] = { "fullScreen", "Sound", "OriginalMusic", "Paddle", "Controls", "Save", "Reset" }; 
+	private String nameLabel[] = { "fullScreen", "Sound", "Original_Music", "Controls", "Save", "Reset" }; 
 	private JToggleButton[] button;
 	private JLabel title;
 	protected Properties gameproperties = new Properties();
@@ -26,16 +26,17 @@ public class Configuration  extends JPanel implements ActionListener  {
 
 	// Constructor
 	public Configuration(){
-		/*
+		setBackground(Color.LIGHT_GRAY);
+		setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		button = new JToggleButton[6];
+		readPropertiesFile();
+
 		title = new JLabel("Configuraciones");
-		title.setForeground(Color.white);
+		title.setForeground(Color.BLACK);
 		title.setFont(new Font("Helvetica", Font.BOLD, 20));
 		title.setIcon(new ImageIcon("Recursos/Imagenes/BOMBER_MAN.png"));
 		title.setIconTextGap(8);
-		setLayout(new GridBagLayout());
-		button = new JToggleButton[7];
-		readPropertiesFile();
-		GridBagConstraints c = new GridBagConstraints();
 		c.gridwidth = 2;
 		c.gridheight = 2;
 		c.weightx = 1;
@@ -43,6 +44,7 @@ public class Configuration  extends JPanel implements ActionListener  {
 		c.gridx = 1;
 		c.gridy = 0;
 		add(title, c);
+		
 		for (int i = 0; i < nameLabel.length; i++) {
 			if (nameLabel[i] == "Save")
 				c.gridx -= 4;
@@ -53,19 +55,19 @@ public class Configuration  extends JPanel implements ActionListener  {
 			c.gridy += 2;
 
 			button[i] = new JToggleButton(nameLabel[i]);button[i].setFocusable(false);
-			button[i].setBackground(Color.BLUE);
+			button[i].setBackground(Color.GRAY);
 			button[i].addActionListener(this);
-			button[i].setBackground(Color.RED);//WHITE
+			button[i].setBackground(Color.WHITE);//WHITE
 			button[i].setOpaque(false);
 			button[i].setBorderPainted(false);
-			button[i].setForeground(Color.white);
+			button[i].setForeground(Color.BLACK);
 			button[i].setFont(new Font("Helvetica", Font.BOLD, 15));
 			button[i].setIconTextGap(6);
 			if (nameLabel[i] != "Save" && nameLabel[i] != "Reset" && nameLabel[i] != "Controls")
 				button[i].setSelected(!Boolean.parseBoolean(gameproperties.getProperty(nameLabel[i])));
-				add(button[i], c);
+			add(button[i], c);
 		}
-		*/
+		
 	}
 	public void actionPerformed(ActionEvent evt) {
 		if (evt.getActionCommand() == "Save") {
@@ -81,11 +83,8 @@ public class Configuration  extends JPanel implements ActionListener  {
 				gameproperties.setProperty("OriginalMusic", "false");
 			} else
 				gameproperties.setProperty("OriginalMusic", "true");
-			if (button[3].isSelected())
-				gameproperties.setProperty("Paddle", "false");
-			else
-				gameproperties.setProperty("Paddle", "true");
-			button[5].setSelected(false); // Deselecciono Save
+			
+			button[4].setSelected(false); // Deselecciono Save
 
 			// Guarda en el archivo todas estas nuevas configuraciones
 			try {
@@ -93,56 +92,75 @@ public class Configuration  extends JPanel implements ActionListener  {
 				gameproperties.store(out, null);
 				out.close();
 			} catch (Exception e) {}
-			/*
-			Bomberman juego = new Bomberman();
-        	t=new Thread(){
-       		 public void run(){
-        	juego.run(1.0/60.0);}
-        	};
-        	t.start();
-			*/
 		}
 		
 		// los acmbios
+		
 		if (evt.getActionCommand() == "Reset") {
 			for (int i = 0; i < nameLabel.length; i++)
 				button[i].setSelected(false);
 			button[5].setSelected(false);
 		}
+
 		if (evt.getActionCommand() == "Controls") {
 			JDialog jd = new JDialog();
-			JTextField keyRight, keyLeft, keyShooting;
+			jd.setSize(400, 200);
+			jd.setVisible(true);
+			
+
+			JTextField keyUp, keyRight, keyDown, keyLeft, keyShooting;
+			keyUp = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("UP"))), 25);
 			keyRight = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("RIGHT"))), 25);
+			keyDown = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("DOWN"))), 25);
 			keyLeft = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("LEFT"))), 25);
 			keyShooting = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("SHOOTING"))), 25);
+			
+			keyUp.setEditable(false);
 			keyRight.setEditable(false);
+			keyDown.setEditable(false);
 			keyLeft.setEditable(false);
 			keyShooting.setEditable(false);
-			jd.setModal(true);
+			
+			//jd.setModal(true);
 			
 			jd.setLayout(new GridLayout(0, 1));
-			jd.setLocationRelativeTo(null);
 			jd.setBackground(Color.BLUE);
-			JButton LEFT = new JButton("LEFT");
-			jd.add(LEFT);
-			jd.add(keyLeft);
+			JButton UP = new JButton("UP");
+			jd.add(UP);
+			jd.add(keyUp);
 			JButton RIGHT = new JButton("RIGHT");
 			jd.add(RIGHT);
 			jd.add(keyRight);
+			JButton DOWN = new JButton("DOWN");
+			jd.add(DOWN);
+			jd.add(keyDown);
+			JButton LEFT = new JButton("LEFT");
+			jd.add(LEFT);
+			jd.add(keyLeft);
 			JButton SHOOTING = new JButton("SHOOTING");
 			jd.add(SHOOTING);
 			jd.add(keyShooting);
 			KeyListener listener = new KeyListener() {
 				public void keyPressed(KeyEvent arg0) {
 					switch(((JButton)jd.getFocusOwner()).getActionCommand()){
-					case "LEFT":{
+					case "UP":{
 						keyLeft.setText(arg0.getKeyText(arg0.getKeyCode()));
-						gameproperties.setProperty("LEFT", Integer.toString(arg0.getKeyCode()));
+						gameproperties.setProperty("UP", Integer.toString(arg0.getKeyCode()));
 						break;
 					}
 					case "RIGHT":{
 						keyRight.setText(arg0.getKeyText(arg0.getKeyCode()));
 						gameproperties.setProperty("RIGHT", Integer.toString(arg0.getKeyCode()));
+						break;
+					}
+					case "DOWN":{
+						keyLeft.setText(arg0.getKeyText(arg0.getKeyCode()));
+						gameproperties.setProperty("DOWN", Integer.toString(arg0.getKeyCode()));
+						break;
+					}
+					case "LEFT":{
+						keyLeft.setText(arg0.getKeyText(arg0.getKeyCode()));
+						gameproperties.setProperty("LEFT", Integer.toString(arg0.getKeyCode()));
 						break;
 					}
 					case "SHOOTING":{
@@ -161,11 +179,11 @@ public class Configuration  extends JPanel implements ActionListener  {
 			};
 			
 			jd.addKeyListener(listener);
+			UP.addKeyListener(listener);
 			RIGHT.addKeyListener(listener);
+			DOWN.addKeyListener(listener);
 			LEFT.addKeyListener(listener);
 			SHOOTING.addKeyListener(listener);
-			jd.setSize(400, 200);
-			jd.setVisible(true);
 		}
 	}
 	
