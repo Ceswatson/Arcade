@@ -32,7 +32,7 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
 
   public Arcade(){
     miframe = new JFrame("ARCADE");
-    miframe.setSize(1024, 768);
+    miframe.setSize(640, 480);
     miframe.setVisible(true);
     
     miframe.setLocationRelativeTo(null);
@@ -138,8 +138,8 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
       juego = new Bomberman();
 
      hilo = new Thread() {
-         public void run() {
-             juego.run(1.0 / 60.0);
+         public void run() { 
+            juego.run(1.0 / 60.0);
          }
      };
      hilo.start();

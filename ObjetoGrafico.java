@@ -11,10 +11,7 @@ public class ObjetoGrafico {
 	double positionX = 0;
 	double positionY = 0;
 	
-	/*
-	public ObjetoGrafico() {
-
-	} */
+	
     public ObjetoGrafico(String filename) {
 		try {
 			//System.out.println(filename+" +>"+this.getClass().getResource(filename).getPath());

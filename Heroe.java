@@ -15,7 +15,8 @@ import java.net.*; //nuevo para sonido
 
 public class Heroe extends ObjetoGrafico implements ObjetoMovible {
 
-    BufferedImage imagen = null;
+    private BufferedImage imagen = null;
+    private final double HEROE_DESPLAZAMIENTO=100.0;
     //private final Rectangle2D posicion = new Rectangle2D.Double();
 
     public Heroe() {
@@ -29,10 +30,16 @@ public class Heroe extends ObjetoGrafico implements ObjetoMovible {
         positionY=y;
     }
 
+    public double getDesplazamiento(){
+        return HEROE_DESPLAZAMIENTO;
+    }
+
 	public void update(final double delta) {
 	
 	}
 	public void draw(final Graphics2D g){
         g.drawImage(imagen,(int)getX(),(int)getY(),null);
     }
+
+    
 }

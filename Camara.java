@@ -1,21 +1,17 @@
 public class Camara {
 
 	private double x,y;
-	private double resX,resY;
-
+	private double resX;
+	private double resY;
+	
     public Camara(double x,double y) {
     	this.x=x;
     	this.y=y;
     }
 	public void seguirPersonaje(Heroe obj){
-		Mundo m=Mundo.getInstance();
-		//this.x = -b.getX()+(m.getWidth()/8);
 		this.x = -obj.getX()+resX/2;
 		if (this.x>0){
 				this.x=0;
-		}
-		if(this.x < -(m.getWidth()-resX)){
-			this.x = -(m.getWidth()-resX);
 		}
 	}
 	public void setViewPort(double x,double y){
