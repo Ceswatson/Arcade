@@ -17,7 +17,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 public class Configuration  extends JPanel implements ActionListener  {
-	private String nameLabel[] = { "fullScreen", "Sound", "Original_Music", "Controls", "Save", "Reset" }; 
+	private String nameLabel[] = { "fullScreen", "Sound", "OriginalMusic", "Controls", "Save", "Reset" }; 
 	private JToggleButton[] button;
 	private JLabel title;
 	protected Properties gameproperties = new Properties();
@@ -64,7 +64,7 @@ public class Configuration  extends JPanel implements ActionListener  {
 			button[i].setFont(new Font("Helvetica", Font.BOLD, 15));
 			button[i].setIconTextGap(6);
 			if (nameLabel[i] != "Save" && nameLabel[i] != "Reset" && nameLabel[i] != "Controls")
-				button[i].setSelected(!Boolean.parseBoolean(gameproperties.getProperty(nameLabel[i])));
+				button[i].setSelected(Boolean.parseBoolean(gameproperties.getProperty(nameLabel[i])));
 			add(button[i], c);
 		}
 		
@@ -72,17 +72,17 @@ public class Configuration  extends JPanel implements ActionListener  {
 	public void actionPerformed(ActionEvent evt) {
 		if (evt.getActionCommand() == "Save") {
 			if (button[0].isSelected()) {
-				gameproperties.setProperty("fullScreen", "false");
-			} else
 				gameproperties.setProperty("fullScreen", "true");
-			if (button[1].isSelected())
-				gameproperties.setProperty("Sound", "false");
-			else
+			}else
+				gameproperties.setProperty("fullScreen", "false");	
+			if (button[1].isSelected()){
 				gameproperties.setProperty("Sound", "true");
+			}else
+				gameproperties.setProperty("Sound", "false");
 			if (button[2].isSelected()) {
-				gameproperties.setProperty("OriginalMusic", "false");
-			} else
 				gameproperties.setProperty("OriginalMusic", "true");
+			}else	
+				gameproperties.setProperty("OriginalMusic", "false");
 			
 			button[4].setSelected(false); // Deselecciono Save
 
@@ -100,91 +100,96 @@ public class Configuration  extends JPanel implements ActionListener  {
 			for (int i = 0; i < nameLabel.length; i++)
 				button[i].setSelected(false);
 			button[5].setSelected(false);
+			try {
+				FileOutputStream out = new FileOutputStream(fileProperties);
+				gameproperties.store(out, null);
+				out.close();
+			} catch (Exception e) {}
 		}
 
-		if (evt.getActionCommand() == "Controls") {
-			JDialog jd = new JDialog();
-			jd.setSize(400, 200);
-			jd.setVisible(true);
+		// if (evt.getActionCommand() == "Controls") {
+		// 	JDialog jd = new JDialog();
+		// 	jd.setSize(400, 200);
+		// 	jd.setVisible(true);
 			
 
-			JTextField keyUp, keyRight, keyDown, keyLeft, keyShooting;
-			keyUp = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("UP"))), 25);
-			keyRight = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("RIGHT"))), 25);
-			keyDown = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("DOWN"))), 25);
-			keyLeft = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("LEFT"))), 25);
-			keyShooting = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("SHOOTING"))), 25);
+		// 	JTextField keyUp, keyRight, keyDown, keyLeft, keyShooting;
+		// 	keyUp = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("UP"))), 25);
+		// 	keyRight = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("RIGHT"))), 25);
+		// 	keyDown = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("DOWN"))), 25);
+		// 	keyLeft = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("LEFT"))), 25);
+		// 	keyShooting = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("SHOOTING"))), 25);
 			
-			keyUp.setEditable(false);
-			keyRight.setEditable(false);
-			keyDown.setEditable(false);
-			keyLeft.setEditable(false);
-			keyShooting.setEditable(false);
+		// 	keyUp.setEditable(false);
+		// 	keyRight.setEditable(false);
+		// 	keyDown.setEditable(false);
+		// 	keyLeft.setEditable(false);
+		// 	keyShooting.setEditable(false);
 			
-			//jd.setModal(true);
+		// 	//jd.setModal(true);
 			
-			jd.setLayout(new GridLayout(0, 1));
-			jd.setBackground(Color.BLUE);
-			JButton UP = new JButton("UP");
-			jd.add(UP);
-			jd.add(keyUp);
-			JButton RIGHT = new JButton("RIGHT");
-			jd.add(RIGHT);
-			jd.add(keyRight);
-			JButton DOWN = new JButton("DOWN");
-			jd.add(DOWN);
-			jd.add(keyDown);
-			JButton LEFT = new JButton("LEFT");
-			jd.add(LEFT);
-			jd.add(keyLeft);
-			JButton SHOOTING = new JButton("SHOOTING");
-			jd.add(SHOOTING);
-			jd.add(keyShooting);
-			KeyListener listener = new KeyListener() {
-				public void keyPressed(KeyEvent arg0) {
-					switch(((JButton)jd.getFocusOwner()).getActionCommand()){
-					case "UP":{
-						keyLeft.setText(arg0.getKeyText(arg0.getKeyCode()));
-						gameproperties.setProperty("UP", Integer.toString(arg0.getKeyCode()));
-						break;
-					}
-					case "RIGHT":{
-						keyRight.setText(arg0.getKeyText(arg0.getKeyCode()));
-						gameproperties.setProperty("RIGHT", Integer.toString(arg0.getKeyCode()));
-						break;
-					}
-					case "DOWN":{
-						keyLeft.setText(arg0.getKeyText(arg0.getKeyCode()));
-						gameproperties.setProperty("DOWN", Integer.toString(arg0.getKeyCode()));
-						break;
-					}
-					case "LEFT":{
-						keyLeft.setText(arg0.getKeyText(arg0.getKeyCode()));
-						gameproperties.setProperty("LEFT", Integer.toString(arg0.getKeyCode()));
-						break;
-					}
-					case "SHOOTING":{
-						keyShooting.setText(arg0.getKeyText(arg0.getKeyCode()));
-						gameproperties.setProperty("SHOOTING", Integer.toString(arg0.getKeyCode()));
+		// 	jd.setLayout(new GridLayout(0, 1));
+		// 	jd.setBackground(Color.BLUE);
+		// 	JButton UP = new JButton("UP");
+		// 	jd.add(UP);
+		// 	jd.add(keyUp);
+		// 	JButton RIGHT = new JButton("RIGHT");
+		// 	jd.add(RIGHT);
+		// 	jd.add(keyRight);
+		// 	JButton DOWN = new JButton("DOWN");
+		// 	jd.add(DOWN);
+		// 	jd.add(keyDown);
+		// 	JButton LEFT = new JButton("LEFT");
+		// 	jd.add(LEFT);
+		// 	jd.add(keyLeft);
+		// 	JButton SHOOTING = new JButton("SHOOTING");
+		// 	jd.add(SHOOTING);
+		// 	jd.add(keyShooting);
+		// 	KeyListener listener = new KeyListener() {
+		// 		public void keyPressed(KeyEvent arg0) {
+		// 			switch(((JButton)jd.getFocusOwner()).getActionCommand()){
+		// 			case "UP":{
+		// 				keyLeft.setText(arg0.getKeyText(arg0.getKeyCode()));
+		// 				gameproperties.setProperty("UP", Integer.toString(arg0.getKeyCode()));
+		// 				break;
+		// 			}
+		// 			case "RIGHT":{
+		// 				keyRight.setText(arg0.getKeyText(arg0.getKeyCode()));
+		// 				gameproperties.setProperty("RIGHT", Integer.toString(arg0.getKeyCode()));
+		// 				break;
+		// 			}
+		// 			case "DOWN":{
+		// 				keyLeft.setText(arg0.getKeyText(arg0.getKeyCode()));
+		// 				gameproperties.setProperty("DOWN", Integer.toString(arg0.getKeyCode()));
+		// 				break;
+		// 			}
+		// 			case "LEFT":{
+		// 				keyLeft.setText(arg0.getKeyText(arg0.getKeyCode()));
+		// 				gameproperties.setProperty("LEFT", Integer.toString(arg0.getKeyCode()));
+		// 				break;
+		// 			}
+		// 			case "SHOOTING":{
+		// 				keyShooting.setText(arg0.getKeyText(arg0.getKeyCode()));
+		// 				gameproperties.setProperty("SHOOTING", Integer.toString(arg0.getKeyCode()));
 
-					}
-					}
-				}
+		// 			}
+		// 			}
+		// 		}
 
-				public void keyReleased(KeyEvent arg0) {
-				}
+		// 		public void keyReleased(KeyEvent arg0) {
+		// 		}
 
-				public void keyTyped(KeyEvent arg0) {
-				}
-			};
+		// 		public void keyTyped(KeyEvent arg0) {
+		// 		}
+		// 	};
 			
-			jd.addKeyListener(listener);
-			UP.addKeyListener(listener);
-			RIGHT.addKeyListener(listener);
-			DOWN.addKeyListener(listener);
-			LEFT.addKeyListener(listener);
-			SHOOTING.addKeyListener(listener);
-		}
+		// 	jd.addKeyListener(listener);
+		// 	UP.addKeyListener(listener);
+		// 	RIGHT.addKeyListener(listener);
+		// 	DOWN.addKeyListener(listener);
+		// 	LEFT.addKeyListener(listener);
+		// 	SHOOTING.addKeyListener(listener);
+		// }
 	}
 	
 	public void readPropertiesFile() {

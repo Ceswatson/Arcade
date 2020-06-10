@@ -3,12 +3,12 @@ import com.entropyinteractive.*;
 //import javafx.geometry.Rectangle2D;
 import java.awt.geom.Rectangle2D;
 
-
 import java.awt.*;
 import java.awt.event.*; //eventos
 
 import java.awt.image.*; //imagenes
 import java.io.File;
+import java.io.FileInputStream;
 
 import javax.imageio.*; //imagenes
 
@@ -41,10 +41,17 @@ public class Bomberman extends JGame {
     //////////////////////////////////////
     private Camara camara; 
 
+    // variables de configuraciones
+    private Sonido reproducir;
+
+    final double HEROE_DESPLAZAMIENTO=50.0;
 
     public Bomberman() {
         super("Bomberman", 640, 480);
         System.out.println(appProperties.stringPropertyNames());
+        setearPropiedades();
+        //System.out.println(appProperties.stringPropertyNames());
+        
     }
 
     public void gameStartup() {
@@ -86,6 +93,8 @@ public class Bomberman extends JGame {
             if ((event.getID() == KeyEvent.KEY_PRESSED) &&
                 (event.getKeyCode() == KeyEvent.VK_ESCAPE)) {
                 stop(); //bucleJuego.jar
+                //paro la musica aca momentaneamente
+                reproducir.detener();
             }
         }
 
@@ -394,4 +403,22 @@ public class Bomberman extends JGame {
             break;
         }
     }
+    */
+
+    public void setearPropiedades(){
+        Properties propiedades=new Properties();
+        try {
+            propiedades.load(new FileInputStream("jgame.properties"));
+            // musica
+            if (Boolean.parseBoolean(propiedades.getProperty("OriginalMusic"))){
+                reproducir = new Sonido("Recursos/Sonidos/Musicas/.wav/03_Stage_Theme.wav");
+                reproducir.comenzar();
+                reproducir.loop();
+            }
+            
+        } catch (Exception exception) {
+            System.out.println("ERROR AL CARGAR PROPERTIES");
+        }
+    }
+
 }
