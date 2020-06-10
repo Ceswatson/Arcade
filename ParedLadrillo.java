@@ -1,16 +1,14 @@
 import java.awt.*; 
-
-
 import java.awt.image.*; 
 
-public class ParedLadrillo extends Pared { 
+public class ParedLadrillo extends Pared{ 
  
-    public ParedPiedra(int x,  int y) {
+    public ParedLadrillo(int x,  int y) {
         super("Recursos/Imagenes/Ladrillo.png");
         setPosition(x, y);
     }
  
-    public void setImagen(BufferedImage img){ 
+    public void setImagen(final BufferedImage img){ 
         this.imagen=img; 
     } 
 

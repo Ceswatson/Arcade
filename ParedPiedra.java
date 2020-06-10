@@ -1,5 +1,4 @@
 import java.awt.*; 
- 
 import java.awt.image.*; 
  
 public class ParedPiedra extends Pared{ 
@@ -8,6 +7,11 @@ public class ParedPiedra extends Pared{
         super("Recursos/Imagenes/Piedra.png");
         setPosition(x, y);
     }
+
+    public void setPosition(int x,int y){
+		this.positionX = x;
+		this.positionY = y;
+	}
 
     public void setImagen(final BufferedImage img) {
         this.imagen=img; 

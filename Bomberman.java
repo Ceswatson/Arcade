@@ -3,12 +3,12 @@ import com.entropyinteractive.*;
 //import javafx.geometry.Rectangle2D;
 import java.awt.geom.Rectangle2D;
 
+import java.util.concurrent.ThreadLocalRandom;
 import java.awt.*;
 import java.awt.event.*; //eventos
 
 import java.awt.image.*; //imagenes
 import java.io.File;
-import java.io.FileInputStream;
 
 import javax.imageio.*; //imagenes
 
@@ -25,6 +25,8 @@ import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.io.FileInputStream; 
+
 
 //Menu del Juego, donde se puede seleccionar jugar
 public class Bomberman extends JGame {
@@ -34,27 +36,31 @@ public class Bomberman extends JGame {
     private Fondo gris;
     private Vector<Fantasma> vecGhost;
     private Vector<Pared> vecParedes;
+    private Vector<Pared> bloquesOcupados;
+    private int CANT_LADRILLOS = 50;
     private Vector<Bomba> vecBombas;
+    private int cantBombas = 1;
     private Puerta door;
     ////////////Movimiento////////////////
     String restriccion = "libre";
     //////////////////////////////////////
     private Camara camara; 
+    // variables de configuraciones 
+    private Sonido reproducir; 
+    
+    private int puntaje;
 
-    // variables de configuraciones
-    private Sonido reproducir;
-
-    final double HEROE_DESPLAZAMIENTO=50.0;
 
     public Bomberman() {
         super("Bomberman", 640, 480);
         System.out.println(appProperties.stringPropertyNames());
-        setearPropiedades();
-        //System.out.println(appProperties.stringPropertyNames());
-        
+        setearPropiedades(); 
+        //System.out.println(appProperties.stringPropertyNames()); 
+         
     }
 
     public void gameStartup() {
+          
         camara = new Camara(0,0);
         camara.setRegionVisible(640, 448); //Ventana 640/480  448
 
@@ -65,26 +71,35 @@ public class Bomberman extends JGame {
         background.setPosition(0, 96);
 
         hero = new Heroe();
-        hero.setPosition(33,97); // 32-128
+        hero.setPosition(33,97);
 
         door = new Puerta();
         
         vecParedes = new Vector<Pared>();
+        bloquesOcupados = new Vector<Pared>();
+
         iniciarBloquesPiedra();
         iniciarBloquesLadrillo();
-    
+
+        vecGhost = new Vector<Fantasma>();
+        //funcion meter fantasma
         vecBombas = new Vector<Bomba>();
 
-        //vecGhost = new Vector<Fantasma>();
+        
     }
     public void gameUpdate(final double delta) {
         final Keyboard keyboard = this.getKeyboard();
        
         //Movimiento// si se puede sacar a un funcion mejor, sino Meh.
         movimientoHeroe(delta,keyboard);
+        camara.seguirPersonaje(hero);
 
         if (!colision()){
             restriccion = "libre";
+        }
+
+        if (keyboard.isKeyPressed(KeyEvent.VK_SPACE)){
+            soltarBomba();
         }
 
         // Esc fin del juego
@@ -93,16 +108,15 @@ public class Bomberman extends JGame {
             if ((event.getID() == KeyEvent.KEY_PRESSED) &&
                 (event.getKeyCode() == KeyEvent.VK_ESCAPE)) {
                 stop(); //bucleJuego.jar
-                //paro la musica aca momentaneamente
-                reproducir.detener();
+                 //paro la musica aca momentaneamente 
+                 reproducir.detener(); 
             }
         }
-
-        camara.seguirPersonaje(hero);
-
     }
     
     public void gameDraw(final Graphics2D g) {
+        //Mostrar menu
+
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         gris.display(g);
         background.display(g);
@@ -170,40 +184,109 @@ public class Bomberman extends JGame {
  
     void iniciarBloquesLadrillo(){
         final int bloque = 32;
+        double x=0;
+        double y=0;
+        int cant=0;
+        int bloques;
+        int randomNumX,randomNumY;
+        boolean flag;
+        //bloquesOcupados=vecParedes;
         /*
-        int valorDado = Math.floor(Math.random()*6+1); // Esto da valores entre 1.0 y 7.0 excluido el 7.0
-
-
-        for(int i=0;i<vecParedes.size();i++){
-            vecParedes.elementAt(i).getX();
-            vecParedes.elementAt(i).getY();
-
-
-            vecParedes.addElement(new ParedLadrillo(i,j));
-        }
+        bloquesOcupados.addElement(new ParedLadrillo(32,96)); //agregar la L del inicio
+        bloquesOcupados.addElement(new ParedLadrillo(64,96)); //agregar la L del inicio
+        bloquesOcupados.addElement(new ParedLadrillo(32,128)); //agregar la L del inicio
         */
+////////////////////////////////////////////////////////////////////////////
+        while(cant<CANT_LADRILLOS){
+            //int randomNum = ThreadLocalRandom.current().nextInt(min, max + 1);
+            randomNumX = 32 + 32 * (ThreadLocalRandom.current().nextInt(0, 28 + 1));
+            randomNumY = 96 + 32 * (ThreadLocalRandom.current().nextInt(0, 10 + 1));
+            
+            System.out.println("numeroX: " + randomNumX);
+            System.out.println("NumeroY: " + randomNumY);
+            flag = false;
+            bloques = vecParedes.size();
+            System.out.println("Bloques: " + bloques);
+            for(int i=0; flag == false && i<bloques; i++){
+            int i=0;
+                x=vecParedes.elementAt(i).getX();
+                y=vecParedes.elementAt(i).getY();
+                System.out.println("X: " + x);
+                System.out.println("Y: " + y);
+                if(!(randomNumX == x)){
+                    if(!(randomNumY == y)){
+                        vecParedes.addElement(new ParedLadrillo(randomNumX,randomNumY));
+                        flag = true;
+                        cant++;
+                        System.out.println("cant: " + cant);
+
+                    }
+                }
+            }
+        }
     }
 
     void iniciarBloquesPiedra (){ //Guardar las i*j en un vector jeje
         final int bloque = 32;
-        for(int i=0;i<1024;i+=bloque){ // x
+        for(int i=0;i<992;i+=bloque){ // x
             vecParedes.addElement(new ParedPiedra(i,64)); // Primer fila
             vecParedes.addElement(new ParedPiedra(i,448));// Ultima fila
-
-
         }
         for(int j=96;j<(11*bloque)+128;j+=bloque){ // y
             vecParedes.addElement(new ParedPiedra(0,j)); // Primer columna
-            vecParedes.addElement(new ParedPiedra(1024-32,j)); // Ultima columna 
+            vecParedes.addElement(new ParedPiedra(1024-64,j)); // Ultima columna 
         }     
-
         for (int i=64; i<30*bloque; i+= (bloque*2)){ //32
             for(int j=128; j<(11*bloque)+128; j+= (bloque*2)){
                 vecParedes.addElement(new ParedPiedra(i,j));
             }
         }
     }
+    public void soltarBomba(){
+        if (cantBombas>0){
+            int x=0,y=0;
+            final int[] arr={0, 32, 64, 96, 128, 160, 192, 224, 256, 288, 
+                320, 352, 384, 416, 448, 480, 512, 544, 576, 608, 
+                640, 672, 704, 736, 768, 800, 832, 864, 896, 928, 
+                960, 992};
 
+            int i=0;
+            while (arr[i]<(int)hero.getX()){
+                x=arr[i];
+                i++;
+            }
+            int j=0;
+            while (arr[j]<(int)hero.getY()){
+                y=arr[j];
+                j++;
+            }
+            /*
+            System.out.println("hero y:" + (int)hero.getY());
+            System.out.println("y:"+ y);
+            System.out.println("hero x:" + (int)hero.getX());
+            System.out.println("x:"+ x);
+            */
+            vecBombas.addElement(new Bomba(x,y));
+            cantBombas--;
+        }
+    }
+
+    public void setearPropiedades(){ 
+        final Properties propiedades=new Properties(); 
+        try { 
+            propiedades.load(new FileInputStream("jgame.properties")); 
+            // musica 
+            if (Boolean.parseBoolean(propiedades.getProperty("OriginalMusic"))){ 
+                reproducir = new Sonido("Recursos/Sonidos/Musicas/.wav/03_Stage_Theme.wav"); 
+                reproducir.comenzar(); 
+                reproducir.loop(); 
+            } 
+             
+        } catch (final Exception exception) { 
+            System.out.println("ERROR AL CARGAR PROPERTIES"); 
+        } 
+    } 
+ 
     /// No la puedo pasar a Heroe.java porque este no es hijo de Jgame y no tiene los KeyEvent
     public void movimientoHeroe(final double delta, final Keyboard keyboard) { 
         switch(restriccion){
@@ -403,22 +486,4 @@ public class Bomberman extends JGame {
             break;
         }
     }
-    */
-
-    public void setearPropiedades(){
-        Properties propiedades=new Properties();
-        try {
-            propiedades.load(new FileInputStream("jgame.properties"));
-            // musica
-            if (Boolean.parseBoolean(propiedades.getProperty("OriginalMusic"))){
-                reproducir = new Sonido("Recursos/Sonidos/Musicas/.wav/03_Stage_Theme.wav");
-                reproducir.comenzar();
-                reproducir.loop();
-            }
-            
-        } catch (Exception exception) {
-            System.out.println("ERROR AL CARGAR PROPERTIES");
-        }
-    }
-
 }
