@@ -14,7 +14,6 @@ public class ObjetoGrafico {
 	
     public ObjetoGrafico(String filename) {
 		try {
-			//System.out.println(filename+" +>"+this.getClass().getResource(filename).getPath());
 			imagen= ImageIO.read(getClass().getResource(filename));
 
 		} catch (IOException e) {
