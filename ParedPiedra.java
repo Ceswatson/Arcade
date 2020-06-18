@@ -1,4 +1,5 @@
-import java.awt.*; 
+
+import java.awt.*;
 import java.awt.image.*; 
  
 public class ParedPiedra extends Pared{ 

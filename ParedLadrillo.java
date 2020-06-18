@@ -1,4 +1,5 @@
-import java.awt.*; 
+
+import java.awt.*;
 import java.awt.image.*; 
 
 public class ParedLadrillo extends Pared{ 

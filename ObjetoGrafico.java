@@ -1,3 +1,4 @@
+
 import java.awt.*;
 import java.awt.geom.*;
 
@@ -13,11 +14,20 @@ public class ObjetoGrafico {
 	
 	
     public ObjetoGrafico(String filename) {
-		try {
-			imagen= ImageIO.read(getClass().getResource(filename));
+		if(!filename.contains(".gif")){
+			try {
+				imagen= ImageIO.read(getClass().getResource(filename));
 
-		} catch (IOException e) {
-			System.out.println(e);
+			} catch (IOException e) {
+				System.out.println("error dibujar bomba");
+			}
+		}
+		else{
+			try{
+				imagen=ImageIO.read(new File(filename));
+			  }catch(IOException e){
+				  System.out.print("error dibujar bomba");
+			  }
 		}
     }
 
