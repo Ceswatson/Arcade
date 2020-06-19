@@ -15,6 +15,8 @@ public class Bomba extends ObjetoGrafico {
     long timer;
     private Rectangle2D posicion = new Rectangle2D.Double();
 
+    boolean explotando = false;
+    
     Date dInit;
     Date dAhora;
     ImageIcon asd;
@@ -24,6 +26,14 @@ public class Bomba extends ObjetoGrafico {
         super("Recursos/Imagenes/Bomba.png");
         setPosition(x, y);
         dInit = new Date();
+    }
+
+    public Bomba(int x, int y,String cadena) {
+        //super("Recursos/Imagenes/Explosion/Derecha1.gif");
+        super("Recursos/Imagenes/Bomba.png");
+        setPosition(x, y);
+        dInit = new Date();
+        setFlama(cadena);
     }
 
     public long getTimer(){
@@ -36,7 +46,14 @@ public class Bomba extends ObjetoGrafico {
         this.imagen=img;
     }
 
-    public void setFlama(String direccion, int cantidad){
+    public void setExlotando(){
+        this.explotando = true;
+    }
+    public boolean getExplotando(){
+        return explotando;
+    }
+
+    public void setFlama(String direccion){
         switch(direccion){
             case "medio":
             try {
@@ -45,29 +62,56 @@ public class Bomba extends ObjetoGrafico {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
-            break;
-            case "derecha":
-                if(cantidad == 1){
-                    try {
-                        this.imagen = ImageIO.read(getClass().getResource("Recursos/Imagenes/Explosion/PuntaDerecha.png"));
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-                if(cantidad == 10){}
-
-
-            break;
-            case "abajo":
-            break;
-            case "izquierda":
             break;
             case "arriba":
+                try {
+                    this.imagen = ImageIO.read(getClass().getResource("Recursos/Imagenes/Explosion/PuntaArriba.png"));
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             break;
+            case "abajo":
+                try {
+                    this.imagen = ImageIO.read(getClass().getResource("Recursos/Imagenes/Explosion/PuntaAbajo.png"));
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            break;
+            case "izquierda":
+                try {
+                    this.imagen = ImageIO.read(getClass().getResource("Recursos/Imagenes/Explosion/PuntaIzquierda.png"));
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            break;
+            case "derecha":
+                try {
+                    this.imagen = ImageIO.read(getClass().getResource("Recursos/Imagenes/Explosion/PuntaDerecha.png"));
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }     
+            break;
+            case "horizontal":
+                try {
+                    this.imagen = ImageIO.read(getClass().getResource("Recursos/Imagenes/Explosion/MedioHorizontal.png"));
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }     
+            break;
+            case "vertical":
+                try {
+                    this.imagen = ImageIO.read(getClass().getResource("Recursos/Imagenes/Explosion/MedioVertical.png"));
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }     
+            break;     
         }
-
     }
     public void draw(Graphics2D g){
         g.drawImage(imagen,(int)posicion.getX(),(int)posicion.getY(),null);

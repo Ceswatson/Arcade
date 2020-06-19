@@ -41,14 +41,14 @@ public class Bomberman extends JGame {
     private Vector<Pared> vecBloquesDisponibles;
     private Vector<Bonus> vecBonus;
     private int CANT_LADRILLOS = 90;
-    private int bloque = 32;
+    private final int bloque = 32;
     private Vector<Bomba> vecBombas;
     private Vector<Bomba> vecFlama;
     private int CANT_BOMBAS = 1;
-    private int CANT_FANTASMAS = 10;
+    private int CANT_FANTASMAS = 5;
     private int CANT_VIDAS = 3;
     private Puerta door;
-    private int EXPLOSION = 1; //modificar con el bonus 
+    private int EXPLOSION = 2; //modificar con el bonus 
     //private Vector<Bonus> vecBonus;
     ////////////Movimiento////////////////
     String restriccion = "libre";
@@ -57,7 +57,7 @@ public class Bomberman extends JGame {
     // variables de configuraciones 
     private Sonido reproducir; 
     
-    private int PUNTAJE=0;
+    private final int PUNTAJE=0;
     //////////Tiempo//////////
     Date dInit = new Date();
     Date dAhora;
@@ -179,9 +179,9 @@ public class Bomberman extends JGame {
         g.setColor(Color.BLACK);
         g.drawString("BOMBERMAN NES // By: VITALE & WATSON", 3, 490);
         dAhora= new Date( );
-    	long dateDiff = dAhora.getTime() - dInit.getTime();
-    	long diffSeconds = dateDiff / 1000 % 60;
-        long diffMinutes = dateDiff / (60 * 1000) % 60;
+    	final long dateDiff = dAhora.getTime() - dInit.getTime();
+    	final long diffSeconds = dateDiff / 1000 % 60;
+        final long diffMinutes = dateDiff / (60 * 1000) % 60;
         g.drawString("Tiempo de Juego: "+diffMinutes+":"+diffSeconds,3,40);
         g.drawString("Tecla ESC = Fin del Juego ",500,40);
         g.drawString("Puntaje: "+PUNTAJE,300,40);
@@ -190,7 +190,6 @@ public class Bomberman extends JGame {
         g.drawString("Tecla ESC = Fin del Juego ",501,41);
         g.drawString("Puntaje: "+PUNTAJE,301,41);
 
-        System.out.println(vecBombas.size());
 
     }   
     public void gameShutdown() {
@@ -263,13 +262,13 @@ public class Bomberman extends JGame {
         // Pared, *Fantasma*, bomba
     }
 
-    public void moverFantasmas(double delta){
+    public void moverFantasmas(final double delta){
         
         for(int i=0;i<vecGhost.size();i++){
             vecGhost.elementAt(i).update(delta);
         }
     }
-    public void redireccionarFantasmas(double delta){
+    public void redireccionarFantasmas(final double delta){
         for(int i=0;i<vecGhost.size();i++){
             for(int j=0;j<vecParedes.size();j++){
                 if (vecGhost.elementAt(i).getPosicion().intersects(vecParedes.elementAt(j).getPosicion())){
@@ -286,7 +285,7 @@ public class Bomberman extends JGame {
 
 
     public void BloquesDisponibles(){
-        int bloque = 32;
+        final int bloque = 32;
         for (int i=32; i<30*bloque; i+=bloque){ //32
             for(int j=96; j<(10*bloque)+128; j+= (bloque*2)){
                 vecBloquesDisponibles.addElement(new ParedLadrillo(i,j));
@@ -377,74 +376,71 @@ public class Bomberman extends JGame {
                 j++;
             }
               
-            vecBombas.addElement(new Bomba(x,y));
+            vecBombas.addElement(new Bomba(x+1,y+1));
             CANT_BOMBAS--;
         }
     }
     public void explotarBomba(){
         int x,y;
-        boolean piedraArriba=false;
         int pasos=0;
+        int distancia=32;
         Vector <Bomba> vecArriba = new Vector<Bomba>();
         Vector <Bomba> vecAbajo = new Vector<Bomba>(); 
         Vector <Bomba> vecDerecha = new Vector<Bomba>();
         Vector <Bomba> vecIzquierda = new Vector<Bomba>();
-        Objetos= new Vector<ObjetoGrafico>(); 
-        int distancia = 32;
-        String cadena = "medio";
-        boolean colision = false;
+        
+         
 
         if(!vecBombas.isEmpty()){
-            for(int i=0;i<vecBombas.size();i++){
-                if(vecBombas.elementAt(i).getTimer()==3){ //Tiempo de explotar
+            for(int i=0;i<vecBombas.size();i++){ //recorro bombas en el campo
+                
+                if(!vecBombas.elementAt(i).getExplotando() && vecBombas.elementAt(i).getTimer()==3){ //Tiempo de explotar
+                    vecBombas.elementAt(i).setExlotando(); //setea en true
 
                     x=(int)vecBombas.elementAt(i).getX();
                     y=(int)vecBombas.elementAt(i).getY();
-                    vecBombas.elementAt(i).setFlama("medio", 1);
+                    vecBombas.elementAt(i).setFlama("medio");
                     vecFlama.addElement(vecBombas.elementAt(i));
+                    
+                    //CargoExplosiones segun el largo
+                    if(EXPLOSION == 1){
+                        vecArriba.addElement(new Bomba(x,y-distancia,"arriba"));
+                        vecAbajo.addElement(new Bomba(x,y+distancia,"abajo"));
+                        vecIzquierda.addElement(new Bomba(x-distancia,y,"izquierda"));
+                        vecDerecha.addElement(new Bomba(x+distancia,y,"derecha"));           
+                    }else{
 
-                    vecDerecha.addElement(new Bomba(x+32,y));
-                       
-                    for(int j=0;colision==false && j<vecParedes.size();j++){
-                        if (vecDerecha.elementAt(0).getPosicion().intersects(vecParedes.elementAt(i).getPosicion())){
-                            colision = true;
-                        } 
+                        do{ //Cargo chorizos de flama
+                            vecArriba.addElement(new Bomba(x,y-distancia,"vertical"));
+                            vecAbajo.addElement(new Bomba(x,y+distancia,"vertical"));
+                            vecIzquierda.addElement(new Bomba(x-distancia,y,"horizontal"));
+                            vecDerecha.addElement(new Bomba(x+distancia,y,"horizontal")); 
+
+                            distancia += 32;
+                            pasos++;
+                        }while(pasos<EXPLOSION);
+                        //Acomodo las puntas
+                        vecArriba.lastElement().setFlama("arriba");
+                        vecAbajo.lastElement().setFlama("abajo");
+                        vecIzquierda.lastElement().setFlama("izquierda");
+                        vecDerecha.lastElement().setFlama("derecha");
                     }
-                    if(colision==false){
-                        vecDerecha.elementAt(0).setFlama("derecha", 1);
-                        vecFlama.addElement(vecDerecha.elementAt(0));
-                    }
 
-                    /*
-                    while(pasos<EXPLOSION){
-                        
-                        pasos++;
-                        distancia += 32;
-                    }
-                    */
-                    //Ahora tengo q ver contra que choca, si choca paredes frenar
-                    // vector.size pasarlo como int a la flama 
+                    //Miro posibles colisiones con paredes y acomodo las flamas
+                    vecArriba = cortarVector(vecArriba);
+                    vecAbajo = cortarVector(vecAbajo);
+                    vecIzquierda = cortarVector(vecIzquierda);
+                    vecDerecha = cortarVector(vecDerecha);
 
-                    switch(EXPLOSION){
-                        case 1:
-                        // ver para arriba 
-                       
-                        
-
-                        // ver para abajo
-
-
-
-                        break;
-
-
-                    }
-                                    
-                    CANT_BOMBAS++;
+                    //Agrego las flamas a vecFlama 
+                    vecFlama.addAll(vecArriba);
+                    vecFlama.addAll(vecAbajo);
+                    vecFlama.addAll(vecIzquierda);
+                    vecFlama.addAll(vecDerecha);
                 }
-                if(vecBombas.elementAt(i).getTimer()>=4){ // Fin de la explosion
-
+                if(vecBombas.elementAt(i).getTimer()>=4){ // Fin de la explosion    
                     vecBombas.remove(i); //saco la bomba, pero me quedo con la flama del centro
+                    CANT_BOMBAS++;
                     vecFlama.clear();
                     vecArriba.clear();
                     vecAbajo.clear();
@@ -453,6 +449,33 @@ public class Bomberman extends JGame {
                 }
             }
         }
+    }
+    
+    public Vector<Bomba> cortarVector(Vector<Bomba> vec){
+        for(int j=0; j<vecParedes.size(); j++){ // j recorro paredes
+            boolean flag = false;
+            boolean freno = false;
+            if(freno==false){
+                for(int k=0; flag==false && k<vec.size();k++){ // k recorre vectores flamas
+                    if (vec.elementAt(k).getPosicion().intersects(vecParedes.elementAt(j).getPosicion())){
+                        flag=true;
+                        freno=true;
+                        if(vecParedes.elementAt(j).getClass().getName() == "ParedLadrillo"){ //choco pared ladrillo
+                            vecParedes.remove(j); //Sacamos la pared de ladrillo del campo
+///////////////////////////////////////////////////////////BONUS///////////////////////////////////////////////////////////////////////
+                            while(k<vec.size()){ // ACA SE VE LA ANIMACION DEL LADRILLO
+                                vec.removeElementAt(k); 
+                            }                               
+                        }else{ //choco pared piedra
+                            while(k<vec.size()){
+                                vec.removeElementAt(k);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return vec;
     }
 
     public void setearPropiedades(){ 
