@@ -19,7 +19,6 @@ public class Bomba extends ObjetoGrafico {
     
     Date dInit;
     Date dAhora;
-    ImageIcon asd;
 
     public Bomba(int x, int y) {
         //super("Recursos/Imagenes/Explosion/Derecha1.gif");
@@ -46,7 +45,7 @@ public class Bomba extends ObjetoGrafico {
         this.imagen=img;
     }
 
-    public void setExlotando(){
+    public void setExplotando(){
         this.explotando = true;
     }
     public boolean getExplotando(){

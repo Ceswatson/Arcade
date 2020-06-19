@@ -6,9 +6,7 @@ import javax.imageio.*;
 import java.io.*;
 
 public class Pared extends ObjetoGrafico {
-
     public Pared(String filename) {
         super (filename);
     }
-
 }
