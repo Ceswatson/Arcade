@@ -10,7 +10,7 @@ java -cp ".;bucleJuego.jar" Arcade
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-
+import java.io.*;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -30,10 +30,13 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
   String[] contenedores={"Pacman","Bomberman","Street Fighter"};
   CardLayout cardLayout;
   boolean BombermanFlag=false;
+  private JLabel ranking;
+  private JTextArea area;
+  private JScrollPane scp;
 
   public Arcade(){
     miframe = new JFrame("ARCADE");
-    miframe.setSize(640, 480);
+    miframe.setSize(1200, 600);
     miframe.setVisible(true);
     
     miframe.setLocationRelativeTo(null);
@@ -68,7 +71,7 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
     gbc.weighty = 1.25;
     gbc.fill = GridBagConstraints.BOTH;
     mipanel.add(imagenes,gbc);
-    imagenes.setBackground(Color.RED);
+    imagenes.setBackground(Color.GRAY);
     cardLayout = new  CardLayout();
     imagenes.setLayout(cardLayout);
     
@@ -80,7 +83,8 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
       
 
     score = new JPanel();
-    score.setBackground(Color.GREEN);
+    score.setLayout(new BorderLayout());
+    score.setBackground(Color.BLACK);
     gbc.gridx = 1;
     gbc.gridy = 1;
     gbc.gridwidth = 1;
@@ -88,7 +92,17 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
     gbc.weightx = 1.25;
     gbc.weighty = 1.25;
     gbc.fill = GridBagConstraints.BOTH;
-    mipanel.add(score,gbc); 
+    ranking = new JLabel("RANKING");
+    ranking.setForeground(Color.WHITE);
+    area = new JTextArea("");
+    area.setBackground(Color.BLACK);
+    area.setForeground(Color.WHITE);
+    scp = new JScrollPane(area);
+    scp.setFont(new java.awt.Font("Tahoma",0,14));
+    score.add(ranking,BorderLayout.NORTH);
+    score.add(scp,BorderLayout.CENTER);
+    mipanel.add(score,gbc);
+
 
     boton = new JButton("Jugar");
     boton.addActionListener(this);
@@ -179,8 +193,26 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
     cardLayout.show(imagenes, myList.getSelectedValue());
     if (myList.getSelectedValue() == "Bomberman"){
         BombermanFlag = true;
-    }else 
-      BombermanFlag = false;
+        cargarpanel();
+      }else{
+        BombermanFlag = false;
+        area.setText("no hay datos");
+      }  
+  }
+
+  public void cargarpanel(){
+    area.setText("");
+    int cont = 0;
+    String linea;
+    try {
+      RandomAccessFile datos = new RandomAccessFile("ranking.txt", "r");
+      while((linea = datos.readLine()) != null && cont<10){
+        area.append(linea + "\n");
+        cont++;
+      }
+    } catch (Exception e) {
+      //TODO: handle exception
+    }
   }
 
 
