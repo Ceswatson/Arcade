@@ -414,9 +414,21 @@ public class Bomberman extends JGame implements ActionListener {
             y=(int)vecBloquesDisponibles.elementAt(randomNum).getY();
             if(!(x==32&&y==96) && !(x==32&&y==128) && !(x==64&&y==96)){ ///Saco la L inicial   
                 vecBloquesDisponibles.remove(randomNum); //Saco el bloqueDisponible
-                vecGhost.addElement(new Fantasma(x,y));  
+                vecGhost.addElement(new FantasmaRosa(x,y));  
                 cant++;  
             }
+        }
+    }
+
+    public void iniciarFantasmasAzules(){
+        int x,y;
+        int cantbloques = vecBloquesDisponibles.size();
+        int randomNum = ThreadLocalRandom.current().nextInt(0, cantbloques);
+        x=(int)vecBloquesDisponibles.elementAt(randomNum).getX();
+        y=(int)vecBloquesDisponibles.elementAt(randomNum).getY();
+        if(!(x==32&&y==96) && !(x==32&&y==128) && !(x==64&&y==96)){ ///Saco la L inicial   
+            vecBloquesDisponibles.remove(randomNum); //Saco el bloqueDisponible
+            vecGhost.addElement(new FantasmaAzul(x,y));   
         }
     }
 
@@ -456,6 +468,8 @@ public class Bomberman extends JGame implements ActionListener {
         Vector <Bomba> vecAbajo = new Vector<Bomba>(); 
         Vector <Bomba> vecDerecha = new Vector<Bomba>();
         Vector <Bomba> vecIzquierda = new Vector<Bomba>();
+        int choqueBonus = 5;
+        int xb,yb;
         if(!vecBombas.isEmpty()){
             for(int i=0;i<vecBombas.size();i++){ //recorro bombas en el campo
                 
@@ -509,6 +523,20 @@ public class Bomberman extends JGame implements ActionListener {
                             if(vecGhost.elementAt(j).getPosicion().intersects(vecFlama.elementAt(h).getPosicion())){
                                 vecGhost.remove(j);
                                 PUNTAJE += 100;
+                            }
+                        }
+                    }
+                    
+                    //colision de llamas con bonus
+                    for(int h=0; h<vecFlama.size(); h++ ){
+                        for(int b=0; b< vecBonus.size();b++){
+                            xb = (int)vecBonus.elementAt(b).getX();
+                            yb = (int)vecBonus.elementAt(b).getY(); 
+                            if(vecFlama.elementAt(h).getPosicion().intersects(vecBonus.elementAt(b).getPosicion())){
+                                while(choqueBonus>0){
+                                    iniciarFantasmasAzules();
+                                    choqueBonus--;
+                                }
                             }
                         }
                     }

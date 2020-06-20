@@ -10,13 +10,12 @@ import javax.imageio.*;
 import java.io.*;
 import java.net.*;
 
-public class Fantasma extends ObjetoGrafico implements ObjetoMovible {
-    double VELOCIDAD = 20;
+public class Fantasma extends ObjetoGrafico implements ObjetoMovible{
     int direccion=0;
+    double VELOCIDAD = 20;
     boolean volviendo=false;
-    public Fantasma(final int x, final int y) {
-        super("Recursos/Imagenes/Fantasma.png");
-        setPosition(x+1, y+1);
+    public Fantasma(String filename) {
+        super(filename);
         direccion = ThreadLocalRandom.current().nextInt(1, 4);
     }
 
@@ -35,8 +34,7 @@ public class Fantasma extends ObjetoGrafico implements ObjetoMovible {
     public int getDireccion() {
         return this.direccion;
     }
-
-    public void update(final double delta) { //Inicializa los moviminetos
+    public void update(double delta) {
         switch (direccion) {
             case 1:
                 this.setY(this.getY() - VELOCIDAD * delta); // arriba
@@ -70,9 +68,4 @@ public class Fantasma extends ObjetoGrafico implements ObjetoMovible {
         }
 
     }
-
-    public void draw(final Graphics2D g) {
-        g.drawImage(imagen, (int) getX(), (int) getY(), null);
-    }
-
 }
