@@ -23,4 +23,7 @@ public class BonusVida extends Bonus{
     public void draw(final Graphics2D g){
         g.drawImage(imagen,(int)getX(),(int)getY(),null);
     }
+    public void darBonus(Bomberman bomberman){
+        bomberman.setVidas();
+    }
 }
