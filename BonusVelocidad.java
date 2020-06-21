@@ -1,15 +1,13 @@
-
 import java.awt.*;
 import java.awt.image.*;
 
-public class BonusBomba extends Bonus {
-
-    public BonusBomba(int x,  int y) {
-        super("Recursos/Imagenes/Bonus/Bombs.png");
+public class BonusVelocidad extends Bonus {
+    public BonusVelocidad(int x,  int y) {
+        super("Recursos/Imagenes/Bonus/Speed.png");
         setPosition(x, y);
     }
-    public BonusBomba() {
-        super("Recursos/Imagenes/Bonus/Bombs.png");
+    public BonusVelocidad() {
+        super("Recursos/Imagenes/Bonus/Speed.png");
     }
 
     public void setImagen(final BufferedImage img){ 
@@ -24,8 +22,8 @@ public class BonusBomba extends Bonus {
         g.drawImage(imagen,(int)getX(),(int)getY(),null);
     }
 
-    public void darBonus(Bomberman bomberman){
-        bomberman.setBombas();
+    public void darBonus(Bomberman bomberman,Heroe hero){
+        hero.setVelocidad();
         bomberman.addPuntos(puntos);
     }
 }

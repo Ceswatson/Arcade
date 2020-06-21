@@ -1,23 +1,12 @@
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.geom.Rectangle2D;
-
-import java.awt.image.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-
-
 public class Bonus extends ObjetoGrafico { 
+    int puntos=50;
     public Bonus(String filename) {
         //super("Recursos/Imagenes/Explosion/Derecha1.gif");
         super(filename);
 
     }
-
 	public void darBonus(Bomberman bomberman) {
+    }
+    public void darBonus(Bomberman bomberman,Heroe hero) {
 	}
 }

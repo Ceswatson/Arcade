@@ -14,6 +14,7 @@ public class Fantasma extends ObjetoGrafico implements ObjetoMovible{
     int direccion=0;
     double VELOCIDAD = 20;
     boolean volviendo=false;
+    int puntos;
     public Fantasma(String filename) {
         super(filename);
         direccion = ThreadLocalRandom.current().nextInt(1, 4);
@@ -26,7 +27,8 @@ public class Fantasma extends ObjetoGrafico implements ObjetoMovible{
     public void setY(final double y) {
         positionY = y;
     }
-
+    public void darPuntos(Bomberman bomberman){
+    }
     public double getDesplazamiento() {
         return VELOCIDAD;
     }

@@ -7,6 +7,7 @@ import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -35,6 +36,16 @@ public class Bomba extends ObjetoGrafico {
         setFlama(cadena);
     }
 
+    public void explotar(){
+        if(this.timer == 3){
+            
+
+        }
+        if(this.timer <4){
+
+        }
+    }
+
     public long getTimer(){
         dAhora= new Date( );
     	long dateDiff = dAhora.getTime() - dInit.getTime();
@@ -51,7 +62,6 @@ public class Bomba extends ObjetoGrafico {
     public boolean getExplotando(){
         return explotando;
     }
-
     public void setFlama(String direccion){
         switch(direccion){
             case "medio":

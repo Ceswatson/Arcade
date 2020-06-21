@@ -1,33 +1,21 @@
-
 import com.entropyinteractive.*;
-
-//import javafx.scene.paint.Stop;
-
-//import javafx.geometry.Rectangle2D;
 import java.awt.geom.Rectangle2D;
-
 import java.util.concurrent.ThreadLocalRandom;
 import java.awt.*;
 import java.awt.event.*; //eventos
-
 import java.awt.image.*; //imagenes
 import java.io.File;
-
 import javax.imageio.*; //imagenes
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-
 import java.awt.Graphics2D;
-
 import java.awt.geom.*; //Point2d
 import java.util.LinkedList;
-
 import java.util.*;
 import java.text.*;
-
 import java.awt.Color;
 import java.awt.RenderingHints;
 import java.text.SimpleDateFormat;
@@ -56,7 +44,8 @@ public class Bomberman extends JGame implements ActionListener {
     private int CANT_FANTASMAS = 5;
     private int CANT_VIDAS = 3;
     private int CANT_FLAMA = 1; //modificar con el bonus 
-    private int nivel=1;
+    private int LEVEL=1;
+    private boolean DETONADOR=false;
     ////////////Movimiento////////////////
     String restriccion = "libre";
     //////////////////////////////////////
@@ -76,7 +65,8 @@ public class Bomberman extends JGame implements ActionListener {
     private boolean retardo = false;
     ////////////////////////
     private boolean puertaON = false;
-
+    private boolean detonadorON = false;
+    private boolean saltoBomba = false;
     //shoutdown
     JFrame gameover;
     JLabel label;
@@ -96,7 +86,7 @@ public class Bomberman extends JGame implements ActionListener {
         setearPropiedades(); 
         //System.out.println(appProperties.stringPropertyNames()); 
        
-        dInit = new Date();
+        
     }
     public long getTiempo(){
         dAhora= new Date();
@@ -106,7 +96,7 @@ public class Bomberman extends JGame implements ActionListener {
         return (TIMER - tiempoTranscurrido);
     }
     public void setFlama(){
-        if(CANT_FLAMA<3){
+        if(CANT_FLAMA<5){
             CANT_FLAMA++;
         }
     }
@@ -120,9 +110,21 @@ public class Bomberman extends JGame implements ActionListener {
             CANT_VIDAS++;
         }
     }
- 
+    public void setDetonador(){
+        DETONADOR = true;
+    }
+    public void setSaltoBomba(){
+        saltoBomba=true;
+    }
+
+    public void addPuntos(int puntos){
+        PUNTAJE += puntos;
+    }
+
     public void gameStartup() {
           
+        dInit = new Date();
+        
         camara = new Camara(0,0); //0,0
         camara.setRegionVisible(640, 448); //Ventana 640/480  448
 
@@ -146,7 +148,7 @@ public class Bomberman extends JGame implements ActionListener {
 
         vecGhost = new Vector<Fantasma>();
         iniciarFantasmas();
-        if(nivel==2){
+        if(LEVEL==2){
             iniciarFantasmasAzules(3);
         }
         vecBombas = new Vector<Bomba>();
@@ -154,11 +156,13 @@ public class Bomberman extends JGame implements ActionListener {
 
         vecBonus = new Vector<Bonus>();
 
-        vecBonusRandom = new Vector<Bonus>();
+        vecBonusRandom = new Vector<Bonus>(); //Vector que tiene todos los bonus posibles
         vecBonusRandom.addElement(new BonusVida());
         vecBonusRandom.addElement(new BonusBomba());
         vecBonusRandom.addElement(new BonusFlama());
-
+        vecBonusRandom.addElement(new BonusDetonador());
+        vecBonusRandom.addElement(new BonusVelocidad());
+        vecBonusRandom.addElement(new BonusSaltarBomba());
     }
     public void gameUpdate(final double delta) {
         final Keyboard keyboard = this.getKeyboard();
@@ -169,21 +173,25 @@ public class Bomberman extends JGame implements ActionListener {
             camara.seguirPersonaje(hero);
         }
 
-        if (!colision()){
+        if (!colisionHeroe()){
             restriccion = "libre";
         }
 
-
         if (retardo == false && (keyboard.isKeyPressed(KeyEvent.VK_SPACE))){
-        
             soltarBomba();
-            
         }
         retraso();
-        explotarBomba(); 
+        explotarBomba();
+        //checkTimerBombas();
+        
         moverFantasmas(delta);
         redireccionarFantasmas(delta);
 
+        if(DETONADOR == true){
+            if(keyboard.isKeyPressed(KeyEvent.VK_CONTROL)){
+                detonarBombas();
+            }
+        }
         // Esc fin del juego
         final LinkedList < KeyEvent > keyEvents = keyboard.getEvents();
         for (final KeyEvent event: keyEvents) {
@@ -199,6 +207,25 @@ public class Bomberman extends JGame implements ActionListener {
             muerte();
         }
     }
+    public void detonarBombas(){
+        for(int i=0;i<vecBombas.size();i++){
+            vecBombas.elementAt(i).explotar();
+        }
+    }
+    
+    /*
+    public void checkTimerBombas(){
+        if(!vecBombas.isEmpty()){
+            for(int i=0;i<vecBombas.size();i++){
+                if(!vecBombas.elementAt(i).getExplotando() && vecBombas.elementAt(i).getTimer()==3){
+                    vecBombas.elementAt(i).explotarBomba();
+                    
+                }
+            }
+        }
+    }
+    */
+
 
     public void retraso(){    
         if(vecBombas.isEmpty()){
@@ -211,11 +238,8 @@ public class Bomberman extends JGame implements ActionListener {
             }
         }   
     }
-
     public void gameDraw(final Graphics2D g) {
         //Mostrar menu
-        
-
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         gris.display(g);
         background.display(g);
@@ -223,6 +247,9 @@ public class Bomberman extends JGame implements ActionListener {
 
         g.translate(camara.getX(),camara.getY());
             
+            if(puertaON){
+                puerta.display(g);
+            } 
             for(int i=0;i<vecParedes.size();i++){ // Dibujo TODAS las paredes 
                 vecParedes.elementAt(i).display(g);
             }
@@ -238,25 +265,20 @@ public class Bomberman extends JGame implements ActionListener {
             for(int i=0;i<vecBonus.size();i++){ // Dibujo TODAS las paredes 
                 vecBonus.elementAt(i).display(g);
             }
+              
             hero.display(g);  
-            if(puertaON){
-                puerta.display(g);
-            }   
-            
         g.translate(-camara.getX(),-camara.getY()); 
         
         g.setColor(Color.BLACK);
         g.drawString("BOMBERMAN NES // By: VITALE & WATSON", 3, 490);
         g.drawString("TIMER: " + getTiempo(),3,40);
         g.drawString("VIDAS: " + CANT_VIDAS ,500,40);
-        g.drawString("Puntaje: "+PUNTAJE,300,40);
+        g.drawString("PUNTAJE: "+PUNTAJE,300,40);
         
-
     	g.setColor(Color.white);
         g.drawString("TIMER: " + getTiempo(),4,41);
         g.drawString("VIDAS: " + CANT_VIDAS ,501,41);
-        g.drawString("Puntaje: "+PUNTAJE,301,41);
-
+        g.drawString("PUNTAJE: "+PUNTAJE,301,41);
     }   
     public void gameShutdown() {
 
@@ -283,11 +305,14 @@ public class Bomberman extends JGame implements ActionListener {
         
         
         System.out.println("te quedaste sin vidas y termino el juego");
-    }
-  
+    } 
     public void muerte(){
-        CANT_VIDAS--;
         puertaON=false;
+        CANT_VIDAS--; 
+        CANT_BOMBAS=1;
+        CANT_FLAMA=1;
+        saltoBomba=false;
+        hero.ResetVelocidad();
         if(CANT_VIDAS>0){
             //reset
             gameStartup();
@@ -299,30 +324,22 @@ public class Bomberman extends JGame implements ActionListener {
     }
     
     public void colisionFlama(){     
-        boolean flagFantasmas=false;
-        //boolean flagFantasmas=false;
         if(!vecFlama.isEmpty()){
-            for(int i=0; i<vecFlama.size();i++){// Flama-Heroe
-                if(puertaON && flagFantasmas==false){ // Siempre y cuando exista la puerta
+            for(int i=0; i<vecFlama.size();i++){
+                if(puertaON){ // Siempre y cuando exista la puerta
                     if(puerta.getPosicion().intersects(vecFlama.elementAt(i).getPosicion())){
                         iniciarFantasmasAzules(5);
-                        flagFantasmas = true;
                     }
                 }
-                for(int j=0; flagFantasmas==false && j<vecBonus.size();j++){ // Flama-Bonus/Puerta
+                for(int j=0;j<vecBonus.size();j++){ // Flama-Bonus/Puerta
                     if(vecBonus.elementAt(j).getPosicion().intersects(vecFlama.elementAt(i).getPosicion())){
                         vecBonus.removeElementAt(j);
                         iniciarFantasmasAzules(5);
-                        flagFantasmas = true;
                     }
                 }
-                for(int j=0;j< vecGhost.size();j++){// Flama-Fanastama
+                for(int j=0;j< vecGhost.size();j++){ // Flama-Fantasma
                     if(vecGhost.elementAt(j).getPosicion().intersects(vecFlama.elementAt(i).getPosicion())){     
-                        if(vecGhost.elementAt(j).getClass().getName() =="FantasmaAzul"){
-                            PUNTAJE += 150;
-                        }else{
-                            PUNTAJE += 100;
-                        }
+                        vecGhost.elementAt(j).darPuntos(this);
                         vecGhost.remove(j);
                     }
                 }
@@ -336,7 +353,6 @@ public class Bomberman extends JGame implements ActionListener {
     }
     public int contadorColision(){
         int cont=0; 
-
         for(int i=0;i<vecParedes.size();i++){
             if (hero.getPosicion().intersects(vecParedes.elementAt(i).getPosicion())){
                 cont ++;
@@ -349,48 +365,51 @@ public class Bomberman extends JGame implements ActionListener {
         }
         return cont; 
     }
-
-    public boolean colision(){
+    public boolean colisionHeroe(){
         boolean result = false; 
-        if(puertaON && vecGhost.isEmpty()){
+        if(puertaON && vecGhost.isEmpty()){ //Heroe - Puerta
            if(hero.getPosicion().intersects(puerta.getPosicion())){
                //PASAR DE NIVEL!!!!
+               LEVEL++;
            }
         }
-        for(int i=0;i<vecParedes.size();i++){
+        for(int i=0;i<vecParedes.size();i++){ //Heroe - Paredes
             if (hero.getPosicion().intersects(vecParedes.elementAt(i).getPosicion())){
                 result = true;
             }
         }
-        for(int i=0;i<vecBombas.size();i++){ //bomba como obstaculo 
-            if(vecBombas.elementAt(i).getTimer()>1){
-                if (hero.getPosicion().intersects(vecBombas.elementAt(i).getPosicion())){
-                    result = true;
+        if(!saltoBomba){ //Bonus de salto de bombas
+            for(int i=0;i<vecBombas.size();i++){ //Heroe - Bomba (Obstaculo)
+                if(vecBombas.elementAt(i).getTimer()>1){
+                    if (hero.getPosicion().intersects(vecBombas.elementAt(i).getPosicion())){
+                        result = true;
+                    }
                 }
             }
         }
-        for(int i=0;i<vecGhost.size();i++){
+        for(int i=0;i<vecGhost.size();i++){ // Heroe - Fantasma
             if (hero.getPosicion().intersects(vecGhost.elementAt(i).getPosicion())){
                 muerte();
             }
         }
-        for(int i=0;i<vecBonus.size();i++){
+        for(int i=0;i<vecBonus.size();i++){ // Heroe - Bonus
             if (hero.getPosicion().intersects(vecBonus.elementAt(i).getPosicion())){
-                vecBonus.elementAt(i).darBonus(this);
+                if(vecBonus.elementAt(i).getClass().getName()=="BonusVelocidad"){
+                    vecBonus.elementAt(i).darBonus(this,hero);
+                }else{
+                    vecBonus.elementAt(i).darBonus(this);
+                }
                 vecBonus.removeElementAt(i);
-                PUNTAJE += 50;
             }
         }
-        for(int i=0;i<vecFlama.size();i++){
+        for(int i=0;i<vecFlama.size();i++){ // Heroe - Flama
             if (hero.getPosicion().intersects(vecFlama.elementAt(i).getPosicion())){
                 muerte();
             }
         }
         return result;
     }
-
     public void moverFantasmas(double delta){
-        
         for(int i=0;i<vecGhost.size();i++){
             vecGhost.elementAt(i).update(delta);
         }
@@ -408,9 +427,7 @@ public class Bomberman extends JGame implements ActionListener {
                 }
             }
         }
-    }
-
-
+    }  
     public void BloquesDisponibles(){
         int bloque = 32;
         for (int i=32; i<30*bloque; i+=bloque){ //32
@@ -424,7 +441,6 @@ public class Bomberman extends JGame implements ActionListener {
             }
         }
     }
-
     public void iniciarBloquesLadrillo(){
         int x=0;
         int y=0;
@@ -445,7 +461,6 @@ public class Bomberman extends JGame implements ActionListener {
             }
         }
     }
-
     public void iniciarBloquesPiedra (){
         final int bloque = 32;
         for(int i=0;i<992;i+=bloque){ // x
@@ -462,14 +477,12 @@ public class Bomberman extends JGame implements ActionListener {
             }
         }
     }
-
     public void iniciarFantasmas(){
         int x=0;
         int y=0;
         int cant=0;
         int randomNum;
         int cantBloques;
-
         while(cant<CANT_FANTASMAS){
             cantBloques = vecBloquesDisponibles.size();
             randomNum = ThreadLocalRandom.current().nextInt(0, cantBloques);
@@ -482,7 +495,6 @@ public class Bomberman extends JGame implements ActionListener {
             }
         }
     }
-
     public void iniciarFantasmasAzules(int cantidad){
         int x,y;
         int cant=0;
@@ -498,9 +510,7 @@ public class Bomberman extends JGame implements ActionListener {
             }
         }   
     }
-
-    public void soltarBomba(){
-        
+    public void soltarBomba(){   
         if (CANT_BOMBAS>=1){
             int x=0,y=0;
             final int[] arr={0, 32, 64, 96, 128, 160, 192, 224, 256, 288, 
@@ -517,8 +527,7 @@ public class Bomberman extends JGame implements ActionListener {
             while (arr[j]<(int)hero.getY()+15){
                 y=arr[j];
                 j++;
-            }
-              
+            } 
             vecBombas.addElement(new Bomba(x,y));
             CANT_BOMBAS--;
             if(flag_sonido){
@@ -527,6 +536,7 @@ public class Bomberman extends JGame implements ActionListener {
             }
         }
     }
+    
     public void explotarBomba(){
         int x,y;
         int pasos=0;
@@ -541,20 +551,18 @@ public class Bomberman extends JGame implements ActionListener {
                 
                 if(!vecBombas.elementAt(i).getExplotando() && vecBombas.elementAt(i).getTimer()==3){ //Tiempo de explotar
                     vecBombas.elementAt(i).setExplotando(); //setea en true
-
+                    
                     x=(int)vecBombas.elementAt(i).getX();
                     y=(int)vecBombas.elementAt(i).getY();
                     vecBombas.elementAt(i).setFlama("medio");
                     vecFlama.addElement(vecBombas.elementAt(i));
                     
-                    //CargoCANT_FLAMAes segun el largo
                     if(CANT_FLAMA == 1){
                         vecArriba.addElement(new Bomba(x,y-distancia,"arriba"));
                         vecAbajo.addElement(new Bomba(x,y+distancia,"abajo"));
                         vecIzquierda.addElement(new Bomba(x-distancia,y,"izquierda"));
-                        vecDerecha.addElement(new Bomba(x+distancia,y,"derecha"));           
+                        vecDerecha.addElement(new Bomba(x+distancia,y,"derecha"));
                     }else{
-
                         do{ //Cargo chorizos de flama
                             vecArriba.addElement(new Bomba(x,y-distancia,"vertical"));
                             vecAbajo.addElement(new Bomba(x,y+distancia,"vertical"));
@@ -572,17 +580,17 @@ public class Bomberman extends JGame implements ActionListener {
                     }
 
                     //Miro posibles colisiones con paredes y acomodo las flamas
-                    vecArriba = cortarVector(vecArriba);
-                    vecAbajo = cortarVector(vecAbajo);
-                    vecIzquierda = cortarVector(vecIzquierda);
-                    vecDerecha = cortarVector(vecDerecha);
+                    vecArriba = cortarFlama(vecArriba);
+                    vecAbajo = cortarFlama(vecAbajo);
+                    vecIzquierda = cortarFlama(vecIzquierda);
+                    vecDerecha = cortarFlama(vecDerecha);
 
                     //Agrego las flamas a vecFlama 
                     vecFlama.addAll(vecArriba);
                     vecFlama.addAll(vecAbajo);
                     vecFlama.addAll(vecIzquierda);
                     vecFlama.addAll(vecDerecha);    
-                    colisionFlama();       
+                    colisionFlama();
                 }
                 if(vecBombas.elementAt(i).getTimer()>=4){ // Fin de la CANT_FLAMA    
                     vecBombas.remove(i); //saco la bomba, pero me quedo con la flama del centro
@@ -597,7 +605,7 @@ public class Bomberman extends JGame implements ActionListener {
         }
     }
 
-    public Vector<Bomba> cortarVector(Vector<Bomba> vec){
+    public Vector<Bomba> cortarFlama(Vector<Bomba> vec){
         for(int j=0; j<vecParedes.size(); j++){ // j recorro paredes
             boolean flag = false;
             boolean freno = false;
@@ -624,17 +632,29 @@ public class Bomberman extends JGame implements ActionListener {
         }
         return vec;
     }
-    
-
     public void soltarBonus(int x, int y){
-        int randomNum = ThreadLocalRandom.current().nextInt(1, 10);
+        int randomNum = ThreadLocalRandom.current().nextInt(0, 10);
         int randomBonus = ThreadLocalRandom.current().nextInt(0, vecBonusRandom.size());
         String bonusName;
         boolean salio = false;
         if(!puertaON){
-            if(randomNum<2){
+            if(randomNum<1){
                 puerta.setPosition(x,y);
                 puertaON = true;
+                salio = true;
+            }
+        }
+        if(!detonadorON && salio==false){
+            if(randomNum<1){
+                vecBonus.addElement(new BonusDetonador(x,y));
+                detonadorON = true;
+                salio = true;
+            }
+        }
+        if(!saltoBomba && salio==false){
+            if(randomNum<1){
+                vecBonus.addElement(new BonusSaltarBomba(x,y));
+                detonadorON = true;
                 salio = true;
             }
         }
@@ -651,11 +671,13 @@ public class Bomberman extends JGame implements ActionListener {
                     case "BonusVida" :
                         vecBonus.addElement(new BonusVida(x,y));
                     break;
+                    case "BonusVelocidad" :
+                        vecBonus.addElement(new BonusVelocidad(x,y));
+                    break;
                 }
             }
         }
     }
-
     public void setearPropiedades(){ 
         final Properties propiedades=new Properties(); 
         try { 
@@ -675,7 +697,6 @@ public class Bomberman extends JGame implements ActionListener {
             System.out.println("ERROR AL CARGAR PROPERTIES"); 
         } 
     } 
- 
     /// No la puedo pasar a Heroe.java porque este no es hijo de Jgame y no tiene los KeyEvent
     public void movimientoHeroe(final double delta, final Keyboard keyboard) { 
         switch(restriccion){
@@ -683,28 +704,28 @@ public class Bomberman extends JGame implements ActionListener {
                 if (keyboard.isKeyPressed(KeyEvent.VK_UP)){
                     //Animacion la debe hacer Heroe.java
                     hero.setY( hero.getY() - hero.getDesplazamiento() * delta);
-                    if (colision()){
+                    if (colisionHeroe()){
                         restriccion = "noArriba";
                     }
                 }
                 if (keyboard.isKeyPressed(KeyEvent.VK_DOWN)){
                     //Animacion
                     hero.setY( hero.getY() + hero.getDesplazamiento() * delta);
-                    if (colision()){
+                    if (colisionHeroe()){
                         restriccion = "noAbajo";
                     }               
                 }
                 if (keyboard.isKeyPressed(KeyEvent.VK_LEFT)){
                     //Animacion
                     hero.setX( hero.getX() - hero.getDesplazamiento() * delta);
-                    if (colision()){
+                    if (colisionHeroe()){
                         restriccion = "noIzquierda";
                     }
                 }
                 if (keyboard.isKeyPressed(KeyEvent.VK_RIGHT)){
                     //Animacion
                     hero.setX( hero.getX() + hero.getDesplazamiento() * delta);
-                    if (colision()){
+                    if (colisionHeroe()){
                         restriccion = "noDerecha";
                     }
                 }
@@ -875,19 +896,17 @@ public class Bomberman extends JGame implements ActionListener {
             break;
         }
     }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
         if(e.getActionCommand().equals("Aceptar")){
             // por ahora se le carga el nivel 1
             if(textField.getText().isEmpty()==false){
-                escribirRanking(textField.getText(), this.PUNTAJE, 1);
+                escribirRanking(textField.getText(), this.PUNTAJE, LEVEL);
             }
 
         }
     }
-
     private void escribirRanking(String nombre, int puntaje, int nivel) {
         String aux_nombre;
         int aux_puntaje;
@@ -970,5 +989,4 @@ public class Bomberman extends JGame implements ActionListener {
         }
     
     }
-
 }
