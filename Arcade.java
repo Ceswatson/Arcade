@@ -36,7 +36,7 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
 
   public Arcade(){
     miframe = new JFrame("ARCADE");
-    miframe.setSize(1200, 600);
+    miframe.setSize(800, 600);
     miframe.setVisible(true);
     
     miframe.setLocationRelativeTo(null);
@@ -54,7 +54,7 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
     
     gbc.gridx = 0;
     gbc.gridy = 0;
-    gbc.gridwidth = 1;
+    gbc.gridwidth = 1; //1
     gbc.gridheight = 3;
     gbc.weightx = 0.0;
     gbc.weighty = 1.25;
@@ -75,12 +75,14 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
     cardLayout = new  CardLayout();
     imagenes.setLayout(cardLayout);
     
-    //Try and catch
-      
+    try {
       imagenes.add(contenedores[0],new JLabel(new ImageIcon("Recursos/Imagenes/imagen1.jpeg")));
       imagenes.add(contenedores[1],new JLabel(new ImageIcon("Recursos/Imagenes/imagen211.png")));
       imagenes.add(contenedores[2],new JLabel(new ImageIcon("Recursos/Imagenes/imagen3.jpeg")));
-      
+    } catch (Exception e) {
+      System.out.println("ERROR AL CARGAR IMAGENES DE JUEGOS");
+      System.out.println(e);
+  }
 
     score = new JPanel();
     score.setLayout(new BorderLayout());
@@ -97,10 +99,13 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
     area = new JTextArea("");
     area.setBackground(Color.BLACK);
     area.setForeground(Color.WHITE);
+    gbc.weightx = 3;
+    gbc.weighty = 3;
     scp = new JScrollPane(area);
     scp.setFont(new java.awt.Font("Tahoma",0,14));
     score.add(ranking,BorderLayout.NORTH);
     score.add(scp,BorderLayout.CENTER);
+    score.setSize(30, 50);
     mipanel.add(score,gbc);
 
 
@@ -140,6 +145,7 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
     // Button boton=new Button("Bomberman");
     // boton.addActionListener(this);
     // this.add(boton);
+
     miframe.pack();
   }
   
@@ -164,8 +170,9 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
       
       Configuration settings = new Configuration();
       JFrame fconfig = new JFrame();
+      fconfig.setSize(800,600);
       fconfig.add(settings);
-      fconfig.setSize(1024,780);
+      
       fconfig.setVisible(true);
       fconfig.setLocationRelativeTo(null);
 

@@ -16,6 +16,7 @@ public class Sonido {
     
 
     Clip sonido;
+    boolean sonando=false;
 
     public Sonido(String ubicacion){
         try {
@@ -25,9 +26,13 @@ public class Sonido {
             System.out.println("epaaaa" + e);
         }
     }
+    public boolean getSonando(){
+        return sonando;
+    }
 
     public void comenzar(){
         sonido.start();
+        sonando=true;
     }
 
     public void loop(){
@@ -36,5 +41,6 @@ public class Sonido {
 
     public void detener(){
         sonido.stop();
+        sonando=false;
     }
 }

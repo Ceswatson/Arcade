@@ -1,4 +1,7 @@
 import com.entropyinteractive.*;
+
+import javafx.scene.paint.Stop;
+
 import java.awt.geom.Rectangle2D;
 import java.util.concurrent.ThreadLocalRandom;
 import java.awt.*;
@@ -86,10 +89,9 @@ public class Bomberman extends JGame implements ActionListener {
     /////////////////////
     private boolean flagMenu = true;
     public Bomberman() {
-        super("Bomberman", 640, 480);
+        super("Bomberman", 640, 480); //640, 480
         System.out.println(appProperties.stringPropertyNames());
         setearPropiedades(); 
-        //System.out.println(appProperties.stringPropertyNames());   
     }
     public long getTiempo(){
         dAhora= new Date();
@@ -122,6 +124,19 @@ public class Bomberman extends JGame implements ActionListener {
 
     public void addPuntos(int puntos){
         PUNTAJE += puntos;
+    }
+    public void resetValues(){
+        flagMenu=true;
+        retardo = false;
+        puertaON = false;
+        detonadorON = false;
+        saltoBomba = false;
+        CANT_BOMBAS = 1;
+        CANT_VIDAS = 3;
+        CANT_FLAMA = 1;
+        LEVEL=1;
+        DETONADOR=false;
+        flagMuerte = false;
     }
 
     public void gameStartup() {
@@ -218,15 +233,10 @@ public class Bomberman extends JGame implements ActionListener {
             moverFantasmas(delta);
             redireccionarFantasmas(delta);
 
-            if(keyboard.isKeyPressed(KeyEvent.VK_CONTROL)){
-                detonarBombas();
-            }
             if(DETONADOR == true){
-                /*
                 if(keyboard.isKeyPressed(KeyEvent.VK_CONTROL)){
                     detonarBombas();
                 }
-                */
             }
             // Esc fin del juego
             final LinkedList < KeyEvent > keyEvents = keyboard.getEvents();
@@ -259,12 +269,6 @@ public class Bomberman extends JGame implements ActionListener {
         if(!vecBombas.isEmpty()){
             for(int i=0;i<vecBombas.size();i++){
                 vecBombas.elementAt(i).updateTimer();
-                /*
-                    if(!vecBombas.elementAt(i).getExplotando() && vecBombas.elementAt(i).getTimer()==3){
-                    vecBombas.elementAt(i).setExplotando();
-                    vecBombas.elementAt(i).explotar();
-                    }
-                */
             }
         }
     }
@@ -311,17 +315,18 @@ public class Bomberman extends JGame implements ActionListener {
                 }
                 hero.display(g);  
             g.translate(-camara.getX(),-camara.getY()); 
-            
+           
             g.setColor(Color.BLACK);
             g.drawString("BOMBERMAN NES // By: VITALE & WATSON", 3, 490);
-            g.drawString("TIMER: " + getTiempo(),3,40);
-            g.drawString("VIDAS: " + CANT_VIDAS ,500,40);
-            g.drawString("PUNTAJE: "+PUNTAJE,300,40);
+            g.setFont(new Font("Helvetica", Font.BOLD, 20));
+            g.drawString("TIMER: " + getTiempo(),3,45);
+            g.drawString("VIDAS: " + CANT_VIDAS ,550,45);
+            g.drawString("PUNTAJE: "+PUNTAJE,260,45);
             
             g.setColor(Color.white);
-            g.drawString("TIMER: " + getTiempo(),4,41);
-            g.drawString("VIDAS: " + CANT_VIDAS ,501,41);
-            g.drawString("PUNTAJE: "+PUNTAJE,301,41);
+            g.drawString("TIMER: " + getTiempo(),4,46);
+            g.drawString("VIDAS: " + CANT_VIDAS ,551,46);
+            g.drawString("PUNTAJE: "+PUNTAJE,261,46);
 
             if(getTiempo()>200){
                 STAGE.display(g);
@@ -333,10 +338,12 @@ public class Bomberman extends JGame implements ActionListener {
     }   
     public void gameShutdown() {
         if(!flagMuerte){
-            musica.detener();
+            flagMuerte = true;
+            if(flagMusica){
+                musica.detener();
+            }
             finJuego = new Sonido("Recursos/Sonidos/Musicas/09_Game_Over.mp3");
             finJuego.comenzar();
-            stop(); //bucleJuego.jar
             gameover = new JFrame("Fin del juego");
             gameover.setLayout(null);
             gameover.setPreferredSize(new Dimension(400, 200));
@@ -377,7 +384,7 @@ public class Bomberman extends JGame implements ActionListener {
         }
         if(CANT_VIDAS==0){
             gameShutdown();
-            flagMuerte = true; //Me parece que esto es al revez !!
+            
         }
     } 
     
@@ -985,6 +992,8 @@ public class Bomberman extends JGame implements ActionListener {
         if(e.getActionCommand().equals("Aceptar")){
             if(textField.getText().isEmpty()==false){
                 escribirRanking(textField.getText(), this.PUNTAJE, LEVEL);
+                resetValues();
+                gameStartup();
             }
 
         }

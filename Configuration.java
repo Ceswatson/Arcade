@@ -33,7 +33,8 @@ public class Configuration  extends JPanel implements ActionListener  {
 		button = new JToggleButton[6];
 		readPropertiesFile();
 
-		title = new JLabel("Configuraciones");
+		title = new JLabel();
+		//title = new JLabel("Configuraciones");
 		title.setForeground(Color.BLACK);
 		title.setFont(new Font("Helvetica", Font.BOLD, 20));
 		title.setIcon(new ImageIcon("Recursos/Imagenes/BOMBER_MAN.png"));
