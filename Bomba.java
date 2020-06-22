@@ -1,57 +1,64 @@
 
 import java.awt.*;
-import java.awt.geom.*;
 import java.awt.geom.Rectangle2D;
 
 import java.awt.image.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 
 public class Bomba extends ObjetoGrafico {
     long timer;
     private Rectangle2D posicion = new Rectangle2D.Double();
 
     boolean explotando = false;
-    
+    boolean explotarAhora = false;
     Date dInit;
     Date dAhora;
+    long addTres=0;
 
     public Bomba(int x, int y) {
-        //super("Recursos/Imagenes/Explosion/Derecha1.gif");
         super("Recursos/Imagenes/Bomba.png");
         setPosition(x, y);
         dInit = new Date();
     }
 
     public Bomba(int x, int y,String cadena) {
-        //super("Recursos/Imagenes/Explosion/Derecha1.gif");
         super("Recursos/Imagenes/Bomba.png");
         setPosition(x, y);
         dInit = new Date();
         setFlama(cadena);
     }
-
-    public void explotar(){
-        if(this.timer == 3){
-            
-
-        }
-        if(this.timer <4){
-
-        }
+    
+    public void setExplotarAhora(){
+        explotarAhora = true;
+    }
+    public boolean getExplotarAhora(){
+        return explotarAhora;
     }
 
+    public void explotar(){}
+    public void frenar(){}
+
+    public void setTimer(){
+        dAhora = new Date();
+        this.dInit = dAhora;
+        addTres=3;
+    }
+    
     public long getTimer(){
-        dAhora= new Date( );
-    	long dateDiff = dAhora.getTime() - dInit.getTime();
-        long timer = dateDiff / 1000 % 60;
-        return timer;
+        return this.timer;
     }
+    
+    public void updateTimer(){
+        dAhora= new Date( );
+        long dateDiff = dAhora.getTime() - dInit.getTime();
+        this.timer = (dateDiff / 1000 % 60)+addTres;
+        System.out.println(timer);
+    }
+
     public void setImagen(BufferedImage img){
         this.imagen=img;
     }

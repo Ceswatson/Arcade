@@ -1,4 +1,3 @@
-
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.geom.Rectangle2D;
@@ -7,12 +6,6 @@ import java.awt.image.*;
 import javax.imageio.*;
 import java.io.*;
 import java.net.*; //nuevo para sonido
-
-/*public class Heroe implements ObjetoMovible {
-    public void update(double delta){};
-	public double getX(){};
-	public double getY(){};
-}*/
 
 public class Heroe extends ObjetoGrafico implements ObjetoMovible {
 

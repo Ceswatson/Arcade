@@ -25,7 +25,7 @@ public class BonusBomba extends Bonus {
     }
 
     public void darBonus(Bomberman bomberman){
-        bomberman.setBombas();
+        bomberman.addBombas();
         bomberman.addPuntos(puntos);
     }
 }

@@ -154,7 +154,7 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
 
      hilo = new Thread() {
          public void run() { 
-            juego.run(1.0 / 60.0);
+            juego.run(1.0 /144);
          }
      };
      hilo.start();
