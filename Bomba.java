@@ -1,11 +1,9 @@
-
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 import java.awt.image.*;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
@@ -20,13 +18,14 @@ public class Bomba extends ObjetoGrafico {
     long addTres=0;
 
     public Bomba(int x, int y) {
-        super("Recursos/Imagenes/Bomba.png");
+        super("Recursos/Imagenes/Bomba/Bomba1.png");
         setPosition(x, y);
         dInit = new Date();
+ 
     }
 
     public Bomba(int x, int y,String cadena) {
-        super("Recursos/Imagenes/Bomba.png");
+        super("Recursos/Imagenes/Bomba/Bomba1.png");
         setPosition(x, y);
         dInit = new Date();
         setFlama(cadena);
@@ -38,9 +37,6 @@ public class Bomba extends ObjetoGrafico {
     public boolean getExplotarAhora(){
         return explotarAhora;
     }
-
-    public void explotar(){}
-    public void frenar(){}
 
     public void setTimer(){
         dAhora = new Date();
@@ -56,7 +52,6 @@ public class Bomba extends ObjetoGrafico {
         dAhora= new Date( );
         long dateDiff = dAhora.getTime() - dInit.getTime();
         this.timer = (dateDiff / 1000 % 60)+addTres;
-        System.out.println(timer);
     }
 
     public void setImagen(BufferedImage img){

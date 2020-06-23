@@ -16,7 +16,7 @@ public class FantasmaRosa extends Fantasma{
         super("Recursos/Imagenes/Fantasma.png");
         setPosition(x+1, y+1);
         direccion = ThreadLocalRandom.current().nextInt(1, 4);
-        puntos=150;
+        puntos=100;
     }
     public void draw(final Graphics2D g) {
         g.drawImage(imagen, (int) getX(), (int) getY(), null);

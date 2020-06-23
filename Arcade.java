@@ -54,7 +54,7 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
     
     gbc.gridx = 0;
     gbc.gridy = 0;
-    gbc.gridwidth = 1; //1
+    gbc.gridwidth = 1; 
     gbc.gridheight = 3;
     gbc.weightx = 0.0;
     gbc.weighty = 1.25;
@@ -111,13 +111,13 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
 
     boton = new JButton("Jugar");
     boton.addActionListener(this);
-    gbc.gridx = 1;
+    gbc.gridx = 1; //arranque
     gbc.gridy = 2;
-    gbc.gridwidth = 1;
+    gbc.gridwidth = 1; //cuantas columnas o filas o cupe
     gbc.gridheight = 1;
-    gbc.weightx = 1.25;
+    gbc.weightx = 1.25; // que tanto de ancho que extiende la columna cuando se pasa a fullscreen
     gbc.weighty = 0.0;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.fill = GridBagConstraints.HORIZONTAL; //llenar horizontal 
     mipanel.add(boton, gbc);
 
     botonConfig = new JButton("Configuracion");
