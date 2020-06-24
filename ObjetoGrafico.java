@@ -1,4 +1,3 @@
-
 import java.awt.*;
 import java.awt.geom.*;
 
@@ -12,22 +11,11 @@ public class ObjetoGrafico {
 	double positionX = 0;
 	double positionY = 0;
 	
-	
     public ObjetoGrafico(String filename) {
-		if(!filename.contains(".gif")){
-			try {
-				imagen= ImageIO.read(getClass().getResource(filename));
-
-			} catch (IOException e) {
-				System.out.println("error dibujar bomba");
-			}
-		}
-		else{
-			try{
-				imagen=ImageIO.read(new File(filename));
-			  }catch(IOException e){
-				  System.out.print("error dibujar bomba");
-			  }
+		try{
+			imagen=ImageIO.read(new File(filename));
+		}catch(IOException e){
+			System.out.print("error dibujar objeto");
 		}
     }
 
@@ -39,7 +27,7 @@ public class ObjetoGrafico {
 		return imagen.getHeight();
 	}
 
-	public void setImagen(final BufferedImage img){
+	public void setImagen(BufferedImage img){
         this.imagen=img;
     }
 
@@ -49,7 +37,7 @@ public class ObjetoGrafico {
 	}
 
    	public void display(Graphics2D g2) {
-		g2.drawImage(imagen,(int) this.positionX,(int) this.positionY,null);
+		g2.drawImage(this.imagen,(int) this.positionX,(int) this.positionY,null);
    	}
 
 	public double getX(){

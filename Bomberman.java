@@ -216,7 +216,7 @@ public class Bomberman extends JGame implements ActionListener {
             }
         }else{
             
-            if(contador<20){
+            if(contador<40){
                 contador++;
                 cambio=false;
             }else{
@@ -284,8 +284,8 @@ public class Bomberman extends JGame implements ActionListener {
         if(!vecBombas.isEmpty()){
             for(int i=0;i<vecBombas.size();i++){
                 vecBombas.elementAt(i).updateTimer();
-                if(cambio==true){
-                   // vecBombas.elementAt(i).changeImagen();
+                if(cambio==true && !vecBombas.elementAt(i).getExplotando() ){
+                    vecBombas.elementAt(i).changeImagen();
                 }
             }
         }

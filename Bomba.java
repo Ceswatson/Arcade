@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 import java.awt.image.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
@@ -16,12 +17,55 @@ public class Bomba extends ObjetoGrafico {
     Date dInit;
     Date dAhora;
     long addTres=0;
+    BufferedImage bombaGrande = null;
+    BufferedImage bombaMedia = null;
+    BufferedImage bombaFlaca = null;
+    boolean grande = true;
 
     public Bomba(int x, int y) {
         super("Recursos/Imagenes/Bomba/Bomba1.png");
         setPosition(x, y);
         dInit = new Date();
- 
+        
+        try {
+            bombaGrande = ImageIO.read(new File("Recursos/Imagenes/Bomba/Bomba1.png"));
+            bombaMedia = ImageIO.read(new File("Recursos/Imagenes/Bomba/Bomba2.png"));
+            bombaFlaca = ImageIO.read(new File("Recursos/Imagenes/Bomba/Bomba3.png"));
+            bombaFlaca = ImageIO.read(getClass().getResource("Recursos/Imagenes/Bomba/Bomba3.png"));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void changeImagen(){  
+        try {
+            this.imagen = ImageIO.read(getClass().getResource("Recursos/Imagenes/Explosion/MedioBomba.png"));
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+       /*
+        if(imagen == bombaGrande || imagen == bombaFlaca){
+            System.out.println("aca que onda");
+            //super.setImagen(bombaMedia);
+            try {
+                this.imagen = ImageIO.read(getClass().getResource("Recursos/Imagenes/Bomba/Bomba2.png"));
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            grande=false;
+        }
+
+        if(imagen == bombaMedia && grande){
+            System.out.println("y aca que onda");
+            //setImagen(bombaFlaca);
+        }else{
+            //setImagen(bombaGrande);
+            grande=true;
+        }
+        */
     }
 
     public Bomba(int x, int y,String cadena) {
@@ -54,9 +98,9 @@ public class Bomba extends ObjetoGrafico {
         this.timer = (dateDiff / 1000 % 60)+addTres;
     }
 
-    public void setImagen(BufferedImage img){
-        this.imagen=img;
-    }
+    // public void setImagen(BufferedImage img){
+    //     this.imagen=img;
+    // }
 
     public void setExplotando(){
         this.explotando = true;
