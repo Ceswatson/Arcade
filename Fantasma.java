@@ -1,16 +1,6 @@
-
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.geom.Rectangle2D;
-import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
 
-import java.awt.image.*;
-import javax.imageio.*;
-import java.io.*;
-import java.net.*;
-
-public class Fantasma extends ObjetoGrafico implements ObjetoMovible{
+public abstract class Fantasma extends ObjetoGrafico implements ObjetoMovible{
     int direccion=0;
     double VELOCIDAD = 20;
     boolean volviendo=false;
@@ -32,7 +22,7 @@ public class Fantasma extends ObjetoGrafico implements ObjetoMovible{
     public double getDesplazamiento() {
         return VELOCIDAD;
     }
-
+  
     public int getDireccion() {
         return this.direccion;
     }

@@ -1,5 +1,3 @@
-
-
 public class Camara {
 
 	private double x,y;

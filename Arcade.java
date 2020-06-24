@@ -1,4 +1,3 @@
-
 /*
 Compilar
 javac -cp ".;bucleJuego.jar" Arcade.java
@@ -11,7 +10,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.io.*;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -27,7 +25,7 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
   GridBagLayout gbl=new GridBagLayout();
   GridBagConstraints gbc=new GridBagConstraints();
   private JList<String> myList;
-  String[] contenedores={"Pacman","Bomberman","Street Fighter"};
+  String[] contenedores={"Pacman","Bomberman","Street Fighter II"};
   CardLayout cardLayout;
   boolean BombermanFlag=false;
   private JLabel ranking;
@@ -130,31 +128,16 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
         
     miframe.add(mipanel);
 
-  miframe.addWindowListener(new WindowAdapter(){
-    public void windowClosing(WindowEvent windowEvent){
-        System.exit(0);
-      }        
-  });
-
-    //this.setLayout(new GridLayout(0,2));
-    /*
-      Armar la ventana del arcade
-    */
-    // Armo un solo boton que tira el bomberman (por ahora una pantalla negra)
-
-    // Button boton=new Button("Bomberman");
-    // boton.addActionListener(this);
-    // this.add(boton);
+    miframe.addWindowListener(new WindowAdapter(){
+      public void windowClosing(WindowEvent windowEvent){
+          System.exit(0);
+        }        
+    });
 
     miframe.pack();
   }
   
   public void actionPerformed(ActionEvent e){
-    /*
-      e.getActionCommand() y...
-      run() para el juego
-    */
-    //Escucho el boton y runeo el Bomberman
     if (e.getActionCommand().equals("Jugar") && BombermanFlag==true){
       juego = new Bomberman();
 
@@ -178,22 +161,8 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
 
       JDialog jd = new JDialog(fconfig, "configuraciones");
       
-      // jd.setSize(800,600);
-      // jd.setVisible(true);
-			// //jd.setModal(true);
-			// jd.setLayout(new BorderLayout());
-      // Configuration settings = new Configuration();
-      // jd.add(settings,"CONFIGURACION");
-      
     }
-
-    /*
-    if boton de configuracion, abrir una ventana de configuracion en donde se puedan modificar los valores por defecto. 
-    Se deberia modificar el archivo jgame.properties 
-    */
   }
-
-
 
   public void valueChanged(ListSelectionEvent e) {
     // TODO Auto-generated method stub
@@ -224,21 +193,6 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
 
 
   public static void main(String[] args){
-		// Frame f= new Frame ("Arcade");
-    // Arcade ar = new Arcade();
-		// f.add(ar);
-		// WindowListener l=new WindowAdapter() {
-    //   public void windowClosing(WindowEvent e) {
-    //     System.exit(0);
-    //   };
-    // };
-    // f.addWindowListener(l);
-    // f.pack();
-    // f.setVisible(true);
-     // f.setLocationRelativeTo(null);
     Arcade ar = new Arcade();
   }
-
-
-  
 }

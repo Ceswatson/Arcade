@@ -7,7 +7,7 @@ import java.io.*;
 
 public class ObjetoGrafico {
 	protected BufferedImage imagen = null;
-
+	int puntos=0;
 	double positionX = 0;
 	double positionY = 0;
 	
@@ -51,5 +51,8 @@ public class ObjetoGrafico {
 	//Para las colisiones --- se pide un cuadrado en la posicion donde se cuentra el objeto
 	public Rectangle2D getPosicion(){
         return new Rectangle2D.Double(positionX, positionY,30,30);
-    }
+	}
+	public void darPuntos(Bomberman bomberman){
+		bomberman.addPuntos(puntos);
+	}
 }

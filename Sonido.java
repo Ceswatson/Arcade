@@ -1,20 +1,10 @@
 
-/*
- Ejemplo original
-
- https://www3.ntu.edu.sg/home/ehchua/programming/java/J8c_PlayingSound.html
-
- */
-
-// Aca hay que cambiar los path y los nombre de los archivos 
-
 import java.io.File;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
 public class Sonido {
     
-
     Clip sonido;
     boolean sonando=false;
 
