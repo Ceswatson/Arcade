@@ -53,7 +53,7 @@ public class Bomberman extends JGame implements ActionListener {
     //////////////////////////////////////
     private Camara camara; 
     // variables de configuraciones 
-    private Sonido musica,boom,soltarbomb,caminata,bonus,muerte,finJuego;
+    private Sonido musica,boom,soltarbomb,caminata,bonus,muerte,finJuego,siguienteLevel;
     private boolean flag_sonido, flagMusica;
     
     private int PUNTAJE=0;
@@ -77,10 +77,10 @@ public class Bomberman extends JGame implements ActionListener {
     JScrollPane JspRanking;
     //////////////////////
     // ranking
-    protected static String[] nombres=new String[11];
-    protected static int[] puntos=new int[11];
-    protected static int[] niveles=new int[11];
-    protected static String[] fechas=new String[11];
+    protected static String[] nombres=new String[10];
+    protected static int[] puntos=new int[10];
+    protected static int[] niveles=new int[10];
+    protected static String[] fechas=new String[10];
     protected  int lineas=0;
     //////// bandera muerte
     private boolean flagMuerte = false;
@@ -257,8 +257,9 @@ public class Bomberman extends JGame implements ActionListener {
             for (final KeyEvent event: keyEvents) {
                 if ((event.getID() == KeyEvent.KEY_PRESSED) &&
                     (event.getKeyCode() == KeyEvent.VK_ESCAPE)) {
+                    musica.detener();
                     stop(); //bucleJuego.jar
-                    musica.detener();  
+                      
                 }
                 
             }
@@ -357,10 +358,12 @@ public class Bomberman extends JGame implements ActionListener {
     public void gameShutdown() {
         if(!flagMuerte){
             flagMuerte = true; //Me parece que esto es al revez !!
+            System.out.print("alejandro");
             if(flagMusica){
                 musica.detener();
-                //finJuego = new Sonido("Recursos/Sonidos/Musicas/09_Game_Over.mp3");
-                //finJuego.comenzar();
+                finJuego = new Sonido("Recursos/Sonidos/Musicas/09_Game_Over.wav");
+                finJuego.comenzar();
+                finJuego.loop();
             }
             gameover = new JFrame("Fin del juego");
             gameover.setLayout(null);
@@ -403,10 +406,13 @@ public class Bomberman extends JGame implements ActionListener {
         saltoBomba=false;
         hero.ResetVelocidad();
         if(flagMusica){
-            muerte = new Sonido("Recursos/Sonidos/Efectos/Muerte.wav");
             musica.detener();
+        }
+        if(flag_sonido && CANT_VIDAS > 0){
+            muerte = new Sonido("Recursos/Sonidos/Efectos/Muerte.wav");
             muerte.comenzar();
         }
+
         if(CANT_VIDAS>0){
             //reset
             gameStartup();
@@ -516,9 +522,13 @@ public class Bomberman extends JGame implements ActionListener {
         PUNTAJE +=200;
         if(flagMusica){
             musica.detener();
+            siguienteLevel = new Sonido("Recursos/Sonidos/Musicas/05_Stage_Complete.wav");
+            siguienteLevel.comenzar();
         }
+
         gameStartup();
     } 
+
     public void moverFantasmas(double delta){
         for(int i=0;i<vecGhost.size();i++){
             vecGhost.elementAt(i).update(delta);
@@ -724,7 +734,6 @@ public class Bomberman extends JGame implements ActionListener {
             }
         }
     }
-
     public Vector<Bomba> cortarFlama(Vector<Bomba> vec){
         for(int j=0; j<vecParedes.size(); j++){ // j recorro paredes
             boolean flag = false;
@@ -1016,12 +1025,13 @@ public class Bomberman extends JGame implements ActionListener {
             break;
         }
     }
-    @Override
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
         if(e.getActionCommand().equals("Aceptar")){
             if(textField.getText().isEmpty()==false){
                 escribirRanking(textField.getText(), this.PUNTAJE, LEVEL);
+                mostrarRank(JtaRanking);
+                finJuego.detener();
                 resetValues();
                 gameStartup();
             }
@@ -1059,9 +1069,13 @@ public class Bomberman extends JGame implements ActionListener {
                 niveles[0] = nivel;
                 fechas[0] = fecha_actual;
             }else{
-                if(puntaje>=puntos[lineas-1]){    
+                System.out.println("else");
+                if(puntaje>=puntos[lineas-1]){
+                    System.out.println("if puntaje");    
                     for(int i=0;i < lineas && inserto == false;i++){
+                        System.out.println("for");
                         if(puntaje>=puntos[i]){
+                            System.out.println("if puntos");
                             aux_nombre = nombres[i];
                             aux_puntaje = puntos[i];
                             aux_nivel = niveles[i];
@@ -1072,10 +1086,11 @@ public class Bomberman extends JGame implements ActionListener {
                             fechas[i] = fecha_actual;
                             inserto = true;
                             for(int j=lineas-1;j>i;j--){
-                                nombres[j+1]=nombres[j];
-                                puntos[j+1]=puntos[j];
-                                niveles[j+1]=niveles[j];
-                                fechas[j+1]=fechas[j];
+                                System.out.println("for lineas");
+                                nombres[j]=nombres[j-1];
+                                puntos[j]=puntos[j-1];
+                                niveles[j]=niveles[j-1];
+                                fechas[j]=fechas[j-1];
                             }
                             nombres[i+1]=aux_nombre;
                             puntos[i+1]=aux_puntaje;
@@ -1085,10 +1100,13 @@ public class Bomberman extends JGame implements ActionListener {
                     }
                     //AHORA QUE YA INSERTE TENGO QUE ESCRIBIR EL ARCHIVO
                 }else{
-                    nombres[lineas] = nombre;
-                    puntos[lineas] = puntaje;
-                    niveles[lineas] = nivel;
-                    fechas[lineas] = fecha_actual;
+                    if(lineas<10){
+                        nombres[lineas] = nombre;
+                        puntos[lineas] = puntaje;
+                        niveles[lineas] = nivel;
+                        fechas[lineas] = fecha_actual;
+                    }
+                    
                 }
             }
             datos.seek(0);
