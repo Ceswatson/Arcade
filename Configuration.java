@@ -95,6 +95,17 @@ public class Configuration  extends JPanel implements ActionListener  {
 				out.close();
 			} catch (Exception e) {}
 		}
+
+		if(evt.getActionCommand() == "Controls"){
+			JFrame jf = new JFrame();
+			jf.setLayout(new BorderLayout());
+			jf.setSize(805, 460);
+			jf.setVisible(true);
+			JLabel JL = new JLabel();
+			JL.setIcon(new ImageIcon("Recursos/Imagenes/Controles.jpeg"));
+			jf.add(JL);
+			button[3].setSelected(false);
+		}
 		
 		// los acmbios
 		
