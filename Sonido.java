@@ -5,8 +5,8 @@ import javax.sound.sampled.Clip;
 
 public class Sonido {
     
-    Clip sonido;
-    boolean sonando=false;
+    private Clip sonido;
+    private boolean sonando=false;
 
     public Sonido(String ubicacion){
         try {

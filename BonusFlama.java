@@ -1,5 +1,4 @@
 
-import java.awt.*;
 import java.awt.image.*;
 
 public class BonusFlama extends Bonus {
@@ -19,14 +18,9 @@ public class BonusFlama extends Bonus {
 		this.positionY = y;
 	}
 
-    public void draw(final Graphics2D g){
-        g.drawImage(imagen,(int)getX(),(int)getY(),null);
-    }
-
     public void darBonus(Bomberman bomberman){
         bomberman.setFlama();
         bomberman.addPuntos(puntos);
-
     }
 
 }

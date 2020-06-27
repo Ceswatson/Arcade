@@ -1,10 +1,10 @@
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Fantasma extends ObjetoGrafico implements ObjetoMovible{
-    int direccion=0;
-    double VELOCIDAD = 20;
-    boolean volviendo=false;
-    int puntos=100;
+    protected int direccion=0;
+    protected double VELOCIDAD=20;
+    protected boolean volviendo=false;
+    protected int puntos;
     public Fantasma(String filename) {
         super(filename);
         direccion = ThreadLocalRandom.current().nextInt(1, 4);
@@ -18,6 +18,7 @@ public abstract class Fantasma extends ObjetoGrafico implements ObjetoMovible{
         positionY = y;
     }
     public void darPuntos(Bomberman bomberman){
+        bomberman.addPuntos(puntos);
     }
     public double getDesplazamiento() {
         return VELOCIDAD;

@@ -16,18 +16,18 @@ import javax.swing.event.ListSelectionListener;
 import com.entropyinteractive.*;
 
 public class Arcade extends JPanel implements ActionListener,ListSelectionListener { 
-  JGame juego;
-  Thread hilo;
+  private JGame juego;
+  private Thread hilo;
   
   private JButton boton,botonConfig;
   private JFrame miframe;
   private JPanel mipanel,imagenes,score;
-  GridBagLayout gbl=new GridBagLayout();
-  GridBagConstraints gbc=new GridBagConstraints();
+  private GridBagLayout gbl=new GridBagLayout();
+  private GridBagConstraints gbc=new GridBagConstraints();
   private JList<String> myList;
-  String[] contenedores={"Pacman","Bomberman","Street Fighter II"};
-  CardLayout cardLayout;
-  boolean BombermanFlag=false;
+  private String[] contenedores={"Pacman","Bomberman","Street Fighter II"};
+  private CardLayout cardLayout;
+  private boolean BombermanFlag=false;
   private JLabel ranking;
   private JTextArea area;
   private JScrollPane scp;

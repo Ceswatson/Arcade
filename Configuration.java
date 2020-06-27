@@ -103,12 +103,11 @@ public class Configuration  extends JPanel implements ActionListener  {
 			jf.setVisible(true);
 			JLabel JL = new JLabel();
 			JL.setIcon(new ImageIcon("Recursos/Imagenes/Controles.jpeg"));
+			jf.setLocationRelativeTo(null);
 			jf.add(JL);
 			button[3].setSelected(false);
 		}
-		
-		// los acmbios
-		
+				
 		if (evt.getActionCommand() == "Reset") {
 			for (int i = 0; i < nameLabel.length; i++)
 				button[i].setSelected(false);
@@ -119,94 +118,9 @@ public class Configuration  extends JPanel implements ActionListener  {
 				out.close();
 			} catch (Exception e) {}
 		}
-
-		// if (evt.getActionCommand() == "Controls") {
-		// 	JDialog jd = new JDialog();
-		// 	jd.setSize(400, 200);
-		// 	jd.setVisible(true);
-			
-
-		// 	JTextField keyUp, keyRight, keyDown, keyLeft, keyShooting;
-		// 	keyUp = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("UP"))), 25);
-		// 	keyRight = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("RIGHT"))), 25);
-		// 	keyDown = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("DOWN"))), 25);
-		// 	keyLeft = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("LEFT"))), 25);
-		// 	keyShooting = new JTextField(KeyEvent.getKeyText(Integer.parseInt(gameproperties.getProperty("SHOOTING"))), 25);
-			
-		// 	keyUp.setEditable(false);
-		// 	keyRight.setEditable(false);
-		// 	keyDown.setEditable(false);
-		// 	keyLeft.setEditable(false);
-		// 	keyShooting.setEditable(false);
-			
-		// 	//jd.setModal(true);
-			
-		// 	jd.setLayout(new GridLayout(0, 1));
-		// 	jd.setBackground(Color.BLUE);
-		// 	JButton UP = new JButton("UP");
-		// 	jd.add(UP);
-		// 	jd.add(keyUp);
-		// 	JButton RIGHT = new JButton("RIGHT");
-		// 	jd.add(RIGHT);
-		// 	jd.add(keyRight);
-		// 	JButton DOWN = new JButton("DOWN");
-		// 	jd.add(DOWN);
-		// 	jd.add(keyDown);
-		// 	JButton LEFT = new JButton("LEFT");
-		// 	jd.add(LEFT);
-		// 	jd.add(keyLeft);
-		// 	JButton SHOOTING = new JButton("SHOOTING");
-		// 	jd.add(SHOOTING);
-		// 	jd.add(keyShooting);
-		// 	KeyListener listener = new KeyListener() {
-		// 		public void keyPressed(KeyEvent arg0) {
-		// 			switch(((JButton)jd.getFocusOwner()).getActionCommand()){
-		// 			case "UP":{
-		// 				keyLeft.setText(arg0.getKeyText(arg0.getKeyCode()));
-		// 				gameproperties.setProperty("UP", Integer.toString(arg0.getKeyCode()));
-		// 				break;
-		// 			}
-		// 			case "RIGHT":{
-		// 				keyRight.setText(arg0.getKeyText(arg0.getKeyCode()));
-		// 				gameproperties.setProperty("RIGHT", Integer.toString(arg0.getKeyCode()));
-		// 				break;
-		// 			}
-		// 			case "DOWN":{
-		// 				keyLeft.setText(arg0.getKeyText(arg0.getKeyCode()));
-		// 				gameproperties.setProperty("DOWN", Integer.toString(arg0.getKeyCode()));
-		// 				break;
-		// 			}
-		// 			case "LEFT":{
-		// 				keyLeft.setText(arg0.getKeyText(arg0.getKeyCode()));
-		// 				gameproperties.setProperty("LEFT", Integer.toString(arg0.getKeyCode()));
-		// 				break;
-		// 			}
-		// 			case "SHOOTING":{
-		// 				keyShooting.setText(arg0.getKeyText(arg0.getKeyCode()));
-		// 				gameproperties.setProperty("SHOOTING", Integer.toString(arg0.getKeyCode()));
-
-		// 			}
-		// 			}
-		// 		}
-
-		// 		public void keyReleased(KeyEvent arg0) {
-		// 		}
-
-		// 		public void keyTyped(KeyEvent arg0) {
-		// 		}
-		// 	};
-			
-		// 	jd.addKeyListener(listener);
-		// 	UP.addKeyListener(listener);
-		// 	RIGHT.addKeyListener(listener);
-		// 	DOWN.addKeyListener(listener);
-		// 	LEFT.addKeyListener(listener);
-		// 	SHOOTING.addKeyListener(listener);
-		// }
 	}
 	
 	public void readPropertiesFile() {
-
 		try {
 			FileInputStream in = new FileInputStream(fileProperties);
 			gameproperties.load(in);
@@ -214,6 +128,5 @@ public class Configuration  extends JPanel implements ActionListener  {
 		} catch (IOException e) {
 			System.out.println("Error en metodo  readPropertiesFile(): " + e);
 		}
-
 	}	
 }

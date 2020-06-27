@@ -1,27 +1,15 @@
-import java.awt.*;
-import java.awt.geom.Rectangle2D;
-
-import java.awt.image.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-
 import javax.imageio.ImageIO;
 
 public class Bomba extends ObjetoGrafico {
     long timer;
-    private Rectangle2D posicion = new Rectangle2D.Double();
 
     boolean explotando = false;
     boolean explotarAhora = false;
     Date dInit;
     Date dAhora;
     long addTres=0;
-    BufferedImage bombaGrande = null;
-    BufferedImage bombaMedia = null;
-    BufferedImage bombaFlaca = null;
-    boolean grande = true;
-    boolean flaca = false;
 
     public Bomba(int x, int y) {
         super("Recursos/Imagenes/Bomba/Bomba1.png");
@@ -48,7 +36,6 @@ public class Bomba extends ObjetoGrafico {
         this.dInit = dAhora;
         addTres=3;
     }
-    
     public long getTimer(){
         return this.timer;
     }
@@ -125,7 +112,5 @@ public class Bomba extends ObjetoGrafico {
             break;     
         }
     }
-    public void draw(Graphics2D g){
-        g.drawImage(imagen,(int)posicion.getX(),(int)posicion.getY(),null);
-    }
+
 }

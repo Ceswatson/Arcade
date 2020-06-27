@@ -41,13 +41,11 @@ public class Bomberman extends JGame implements ActionListener {
     private Vector<Bomba> vecBombas;
     private Vector<Bomba> vecFlama;
     private int CANT_BOMBAS = 1;
-    private int CANT_FANTASMAS = 0;
+    private int CANT_FANTASMAS = 5;
     private int CANT_VIDAS = 3;
     private int CANT_FLAMA = 1; //modificar con el bonus 
     private int LEVEL=1;
     private boolean DETONADOR=false;
-    ////////////Movimiento////////////////
-    String restriccion = "libre";
     //////////////////////////////////////
     private Camara camara; 
     // variables de configuraciones 
@@ -89,6 +87,8 @@ public class Bomberman extends JGame implements ActionListener {
     private long contador=0;
     private boolean cambio=false;
     /////////////////////////////////////////
+    String restriccion="libre";
+
     public Bomberman() {
         super("Bomberman", 640, 480);
         setearPropiedades(); 
@@ -184,10 +184,10 @@ public class Bomberman extends JGame implements ActionListener {
         iniciarBloquesLadrillo();
 
         vecGhost = new Vector<Fantasma>();
-        // iniciarFantasmas();
-        // if(LEVEL==2){
-        //     iniciarFantasmasAzules(3);
-        // }
+            iniciarFantasmas();
+            if(LEVEL==2){
+                 iniciarFantasmasAzules(3);
+            }
         vecBombas = new Vector<Bomba>();
         vecFlama = new Vector<Bomba>();
 
@@ -209,7 +209,6 @@ public class Bomberman extends JGame implements ActionListener {
     }
     public void gameUpdate(final double delta) {
         final Keyboard keyboard = this.getKeyboard();
-        //Movimiento// si se puede sacar a un funcion mejor, sino Meh.
         if(flagMenu == true){ //Para mostrar el Menu
             if(keyboard.isKeyPressed(KeyEvent.VK_ENTER)) {
                 flagMenu = false;
@@ -218,17 +217,7 @@ public class Bomberman extends JGame implements ActionListener {
             }
         }else{
             
-            if(contador<40){
-                contador++;
-                cambio=false;
-            }else{
-                cambio=true;
-                contador=0;
-            }
-            //System.out.println(contador);
-            //System.out.println(cambio);
-            
-            movimientoHeroe(delta,keyboard);
+            movimientoHeroe(delta,keyboard);//
             
             if (hero.getX()<658){ // para que no te siga hasta el infinito 
                 camara.seguirPersonaje(hero);
@@ -248,7 +237,6 @@ public class Bomberman extends JGame implements ActionListener {
             moverFantasmas(delta);
             redireccionarFantasmas(delta);
 
-
             if(DETONADOR == true){  
                 if(keyboard.isKeyPressed(KeyEvent.VK_CONTROL)){
                     detonarBombas();
@@ -259,57 +247,18 @@ public class Bomberman extends JGame implements ActionListener {
             for (final KeyEvent event: keyEvents) {
                 if ((event.getID() == KeyEvent.KEY_PRESSED) &&
                     (event.getKeyCode() == KeyEvent.VK_ESCAPE)) {
-<<<<<<< HEAD
-                    musica.detener();
-                    stop(); //bucleJuego.jar
-                      
-                }
-                
-=======
                     if(flagMusica){
                         musica.detener();
                     }
                     stop(); //bucleJuego.jar
                 }               
->>>>>>> master
             }
             ///TIEMPO
             if(getTiempo()<0){
                 muerte();
             }
         } 
-    }
-    
-    public void detonarBombas(){
-        if(!vecBombas.isEmpty()){
-            for(int i=0;i<vecBombas.size();i++){
-                if(!vecBombas.elementAt(i).getExplotarAhora()){
-                    vecBombas.elementAt(i).setExplotarAhora();
-                    vecBombas.elementAt(i).setTimer();
-                }
-            }
-        }
-    }
-      
-    public void checkTimerBombas(){
-        if(!vecBombas.isEmpty()){
-            for(int i=0;i<vecBombas.size();i++){
-                vecBombas.elementAt(i).updateTimer();
-            }
-        }
-    }
-    
-    public void retraso(){    
-        if(vecBombas.isEmpty()){
-            retardo = false;
-        }else{
-            if(vecBombas.elementAt(vecBombas.size()-1).getTimer()>=1){
-                retardo = false;
-            }else{
-                retardo = true;
-            }
-        }   
-    }
+    }  
     public void gameDraw(final Graphics2D g) {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         if(flagMenu){
@@ -368,12 +317,7 @@ public class Bomberman extends JGame implements ActionListener {
     }   
     public void gameShutdown() {
         if(!flagMuerte){
-<<<<<<< HEAD
-            flagMuerte = true; //Me parece que esto es al revez !!
-=======
             flagMuerte = true;
->>>>>>> master
-            System.out.print("alejandro");
             if(flagMusica){
                 musica.detener();
                 finJuego = new Sonido("Recursos/Sonidos/Musicas/09_Game_Over.wav");
@@ -412,6 +356,37 @@ public class Bomberman extends JGame implements ActionListener {
             gameover.pack();
             gameover.setVisible(true);
         }
+    }
+    
+    public void detonarBombas(){
+        if(!vecBombas.isEmpty()){
+            for(int i=0;i<vecBombas.size();i++){
+                if(!vecBombas.elementAt(i).getExplotarAhora()){
+                    vecBombas.elementAt(i).setExplotarAhora();
+                    vecBombas.elementAt(i).setTimer();
+                }
+            }
+        }
+    }
+      
+    public void checkTimerBombas(){
+        if(!vecBombas.isEmpty()){
+            for(int i=0;i<vecBombas.size();i++){
+                vecBombas.elementAt(i).updateTimer();
+            }
+        }
+    }
+    
+    public void retraso(){    
+        if(vecBombas.isEmpty()){
+            retardo = false;
+        }else{
+            if(vecBombas.elementAt(vecBombas.size()-1).getTimer()>=1){
+                retardo = false;
+            }else{
+                retardo = true;
+            }
+        }   
     }
     public void muerte(){
         puertaON=false;
@@ -544,7 +519,6 @@ public class Bomberman extends JGame implements ActionListener {
             siguienteLevel = new Sonido("Recursos/Sonidos/Musicas/05_Stage_Complete.wav");
             siguienteLevel.comenzar();
         }
-
         gameStartup();
     } 
 
@@ -842,6 +816,7 @@ public class Bomberman extends JGame implements ActionListener {
             System.out.println("ERROR AL CARGAR PROPERTIES"); 
         } 
     } 
+    
     /// No la puedo pasar a Heroe.java porque este no es hijo de Jgame y no tiene los KeyEvent
     public void movimientoHeroe(final double delta, final Keyboard keyboard) { 
         switch(restriccion){
@@ -1041,6 +1016,7 @@ public class Bomberman extends JGame implements ActionListener {
             break;
         }
     }
+    
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
         if(e.getActionCommand().equals("Aceptar")){
@@ -1084,13 +1060,9 @@ public class Bomberman extends JGame implements ActionListener {
                 niveles[0] = nivel;
                 fechas[0] = fecha_actual;
             }else{
-                System.out.println("else");
                 if(puntaje>=puntos[lineas-1]){
-                    System.out.println("if puntaje");    
                     for(int i=0;i < lineas && inserto == false;i++){
-                        System.out.println("for");
                         if(puntaje>=puntos[i]){
-                            System.out.println("if puntos");
                             aux_nombre = nombres[i];
                             aux_puntaje = puntos[i];
                             aux_nivel = niveles[i];
@@ -1101,7 +1073,6 @@ public class Bomberman extends JGame implements ActionListener {
                             fechas[i] = fecha_actual;
                             inserto = true;
                             for(int j=lineas-1;j>i;j--){
-                                System.out.println("for lineas");
                                 nombres[j]=nombres[j-1];
                                 puntos[j]=puntos[j-1];
                                 niveles[j]=niveles[j-1];
