@@ -3,13 +3,12 @@ import java.util.Date;
 import javax.imageio.ImageIO;
 
 public class Bomba extends ObjetoGrafico {
-    long timer;
-
-    boolean explotando = false;
-    boolean explotarAhora = false;
-    Date dInit;
-    Date dAhora;
-    long addTres=0;
+    private long timer;
+    private boolean explotando = false;
+    private boolean explotarAhora = false;
+    private Date dInit;
+    private Date dAhora;
+    private long addTres=0;
 
     public Bomba(int x, int y) {
         super("Recursos/Imagenes/Bomba/Bomba1.png");
@@ -23,7 +22,7 @@ public class Bomba extends ObjetoGrafico {
         dInit = new Date();
         setFlama(cadena);
     }
-    
+
     public void setExplotarAhora(){
         explotarAhora = true;
     }
@@ -39,7 +38,7 @@ public class Bomba extends ObjetoGrafico {
     public long getTimer(){
         return this.timer;
     }
-    
+
     public void updateTimer(){
         dAhora= new Date( );
         long dateDiff = dAhora.getTime() - dInit.getTime();
@@ -92,7 +91,7 @@ public class Bomba extends ObjetoGrafico {
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
-                }     
+                }
             break;
             case "horizontal":
                 try {
@@ -100,7 +99,7 @@ public class Bomba extends ObjetoGrafico {
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
-                }     
+                }
             break;
             case "vertical":
                 try {
@@ -108,9 +107,11 @@ public class Bomba extends ObjetoGrafico {
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
-                }     
-            break;     
+                }
+            break;
         }
     }
+
+    
 
 }

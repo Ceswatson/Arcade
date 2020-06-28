@@ -1,4 +1,3 @@
-
 import java.awt.image.*;
 
 public class BonusFlama extends Bonus {

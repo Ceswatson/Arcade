@@ -19,6 +19,8 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
   private JGame juego;
   private Thread hilo;
   
+  private Configuration settings;
+
   private JButton boton,botonConfig;
   private JFrame miframe;
   private JPanel mipanel,imagenes,score;
@@ -151,7 +153,7 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
     
     if (e.getActionCommand().equals("Configuracion")){
       
-      Configuration settings = new Configuration();
+      settings = new Configuration();
       JFrame fconfig = new JFrame();
       fconfig.setSize(800,600);
       fconfig.add(settings);
@@ -190,7 +192,6 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
       //TODO: handle exception
     }
   }
-
 
   public static void main(String[] args){
     Arcade ar = new Arcade();

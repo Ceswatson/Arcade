@@ -1,5 +1,5 @@
 public abstract class Bonus extends ObjetoGrafico { 
-    int puntos=50;
+    protected int puntos=50;
     public Bonus(String filename) {
         super(filename);
     }

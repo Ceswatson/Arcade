@@ -1,6 +1,8 @@
 import java.awt.image.*;
 
 public class BonusDetonador extends Bonus {
+    private boolean detonadorON=false;
+
     public BonusDetonador(int x,  int y) {
         super("Recursos/Imagenes/Bonus/Detonator.png");
         setPosition(x, y);
@@ -18,7 +20,14 @@ public class BonusDetonador extends Bonus {
 	}
 
     public void darBonus(Bomberman bomberman){
-        bomberman.setDetonador();
+        detonadorON=true;
         bomberman.addPuntos(puntos);
+    }
+
+    public boolean getDetonador(){
+        return detonadorON;
+    }
+    public void setDetonador(boolean bool){
+        detonadorON=bool;
     }
 }
