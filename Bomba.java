@@ -1,5 +1,7 @@
 import java.io.IOException;
 import java.util.Date;
+import java.util.Vector;
+
 import javax.imageio.ImageIO;
 
 public class Bomba extends ObjetoGrafico {
@@ -111,7 +113,50 @@ public class Bomba extends ObjetoGrafico {
             break;
         }
     }
+    public void explotar(Vector<Bomba> vecFlama,Bomberman bomberman){
+        Vector <Bomba> vecArriba = new Vector<Bomba>();
+        Vector <Bomba> vecAbajo = new Vector<Bomba>(); 
+        Vector <Bomba> vecDerecha = new Vector<Bomba>();
+        Vector <Bomba> vecIzquierda = new Vector<Bomba>();
+        int pasos=0;
+        int distancia=32;
 
+        this.setExplotando();
+        this.setFlama("medio");
+        vecFlama.addElement(this);
     
+        if( bomberman.getFlama()== 1){
+            vecArriba.addElement(new Bomba((int)positionX,(int)positionY-distancia,"arriba"));
+            vecAbajo.addElement(new Bomba((int)positionX,(int)positionY+distancia,"abajo"));
+            vecIzquierda.addElement(new Bomba((int)positionX-distancia,(int)positionY,"izquierda"));
+            vecDerecha.addElement(new Bomba((int)positionX+distancia,(int)positionY,"derecha"));
+        }else{
+            do{ //Cargo chorizos de flama
+                vecArriba.addElement(new Bomba((int)positionX,(int)positionY-distancia,"vertical"));
+                vecAbajo.addElement(new Bomba((int)positionX,(int)positionY+distancia,"vertical"));
+                vecIzquierda.addElement(new Bomba((int)positionX-distancia,(int)positionY,"horizontal"));
+                vecDerecha.addElement(new Bomba((int)positionX+distancia,(int)positionY,"horizontal")); 
+
+                distancia += 32;
+                pasos++;
+            }while(pasos<bomberman.getFlama());
+            //Acomodo las puntas
+            vecArriba.lastElement().setFlama("arriba");
+            vecAbajo.lastElement().setFlama("abajo");
+            vecIzquierda.lastElement().setFlama("izquierda");
+            vecDerecha.lastElement().setFlama("derecha");
+        }
+
+        vecArriba = bomberman.cortarFlama(vecArriba);
+        vecAbajo = bomberman.cortarFlama(vecAbajo);
+        vecIzquierda = bomberman.cortarFlama(vecIzquierda);
+        vecDerecha = bomberman.cortarFlama(vecDerecha);
+
+        //Agrego las flamas a vecFlama 
+        vecFlama.addAll(vecArriba);
+        vecFlama.addAll(vecAbajo);
+        vecFlama.addAll(vecIzquierda);
+        vecFlama.addAll(vecDerecha);    
+    }
 
 }
