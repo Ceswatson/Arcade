@@ -5,6 +5,4 @@ public abstract class Bonus extends ObjetoGrafico {
     }
 	public void darBonus(Bomberman bomberman) {
     }
-    public void darBonus(Bomberman bomberman,Heroe hero) {
-	}
 }

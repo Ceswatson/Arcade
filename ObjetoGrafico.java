@@ -52,7 +52,4 @@ public class ObjetoGrafico {
 	public Rectangle2D getPosicion(){
         return new Rectangle2D.Double(positionX, positionY,30,30);
 	}
-	public void darPuntos(Bomberman bomberman){
-		bomberman.addPuntos(puntos);
-	}
 }

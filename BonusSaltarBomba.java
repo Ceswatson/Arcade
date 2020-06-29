@@ -17,7 +17,7 @@ public class BonusSaltarBomba extends Bonus { // Desactiba colison Heroe-Bomba
 		this.positionY = y;
 	}
 
-    public void darBonus(Bomberman bomberman,Heroe hero){
+    public void darBonus(Bomberman bomberman){
         bomberman.setSaltoBomba();
         bomberman.addPuntos(puntos);
     }

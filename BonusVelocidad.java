@@ -17,8 +17,8 @@ public class BonusVelocidad extends Bonus {
 		this.positionY = y;
 	}
 
-    public void darBonus(Bomberman bomberman,Heroe hero){
-        hero.setVelocidad();
+    public void darBonus(Bomberman bomberman){
+        bomberman.getHeroe().setVelocidad();
         bomberman.addPuntos(puntos);
     }
 }

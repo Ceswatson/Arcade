@@ -113,7 +113,7 @@ public class Bomba extends ObjetoGrafico {
             break;
         }
     }
-    public void explotar(Vector<Bomba> vecFlama,Bomberman bomberman){
+    public void explotar(Bomberman bomberman){
         Vector <Bomba> vecArriba = new Vector<Bomba>();
         Vector <Bomba> vecAbajo = new Vector<Bomba>(); 
         Vector <Bomba> vecDerecha = new Vector<Bomba>();
@@ -123,7 +123,7 @@ public class Bomba extends ObjetoGrafico {
 
         this.setExplotando();
         this.setFlama("medio");
-        vecFlama.addElement(this);
+        bomberman.getvecFlama().addElement(this);
     
         if( bomberman.getFlama()== 1){
             vecArriba.addElement(new Bomba((int)positionX,(int)positionY-distancia,"arriba"));
@@ -153,10 +153,10 @@ public class Bomba extends ObjetoGrafico {
         vecDerecha = bomberman.cortarFlama(vecDerecha);
 
         //Agrego las flamas a vecFlama 
-        vecFlama.addAll(vecArriba);
-        vecFlama.addAll(vecAbajo);
-        vecFlama.addAll(vecIzquierda);
-        vecFlama.addAll(vecDerecha);    
+        bomberman.getvecFlama().addAll(vecArriba);
+        bomberman.getvecFlama().addAll(vecAbajo);
+        bomberman.getvecFlama().addAll(vecIzquierda);
+        bomberman.getvecFlama().addAll(vecDerecha);    
     }
 
 }

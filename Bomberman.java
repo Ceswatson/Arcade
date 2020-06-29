@@ -119,7 +119,6 @@ public class Bomberman extends JGame implements ActionListener {
     public void nextLevel(){
         LEVEL++;
     }
-
     public void addPuntos(int puntos){
         PUNTAJE += puntos;
     }
@@ -137,26 +136,38 @@ public class Bomberman extends JGame implements ActionListener {
         WIN.setMostrando(false);
         PUNTAJE=0;
     }
+    public Heroe getHeroe(){
+        return this.hero;
+    }
+    public Puerta getPuerta(){
+        return this.puerta;
+    }
+    public Vector<Bonus> getvecBonusRandom() {
+        return vecBonusRandom;
+    }
+    public Vector<Bonus> getvecBonus() {
+        return vecBonus;
+    }
+    public Vector<Bomba> getvecFlama() {
+        return vecFlama;
+    }
 
     public void gameStartup() {
         
         dInit = new Date();
-    
         camara = new Camara(0,0); //0,0
         camara.setRegionVisible(640, 448); //Ventana 640/480  448
 
         gris = new Fondo("Recursos/Imagenes/FondoGris.png");
         gris.setPosition(0,0);
-
         background = new Fondo("Recursos/Imagenes/Fondo.png");
         background.setPosition(0, 96);
-
         MENU = new Fondo("Recursos/Imagenes/BOMBER_MAN_MENU.png");
         MENU.setPosition(0,0);
-
         WIN = new Fondo("Recursos/Imagenes/Win.png");
         WIN.setPosition(0,0);
-
+        GAMEOVER = new Fondo("Recursos/Imagenes/gameover.png"); 
+        GAMEOVER.setPosition(0,0);
         if(LEVEL==1){
             STAGE = new Fondo("Recursos/Imagenes/stageOne.png");
         }else{
@@ -164,9 +175,6 @@ public class Bomberman extends JGame implements ActionListener {
         }
         STAGE.setPosition(0,0);
        
-        GAMEOVER = new Fondo("Recursos/Imagenes/gameover.png"); 
-        GAMEOVER.setPosition(0,0);
-
         hero = new Heroe();
         hero.setPosition(33,97);
        
@@ -180,15 +188,15 @@ public class Bomberman extends JGame implements ActionListener {
         iniciarBloquesLadrillo();
 
         vecGhost = new Vector<Fantasma>();
-            iniciarFantasmas();
-            if(LEVEL==2){
-                 iniciarFantasmasAzules(3);
-            }
+        iniciarFantasmas();
+        if(LEVEL==2){
+                iniciarFantasmasAzules(3);
+        }
+
         vecBombas = new Vector<Bomba>();
         vecFlama = new Vector<Bomba>();
 
         vecBonus = new Vector<Bonus>();
-
         vecBonusRandom = new Vector<Bonus>(); //Vector que tiene todos los bonus posibles
         vecBonusRandom.addElement(new BonusVida());
         vecBonusRandom.addElement(new BonusBomba());
@@ -196,7 +204,6 @@ public class Bomberman extends JGame implements ActionListener {
         vecBonusRandom.addElement(new BonusDetonador());
         vecBonusRandom.addElement(new BonusVelocidad());
         vecBonusRandom.addElement(new BonusSaltarBomba());
-        
         if(flagMusica){
             musica = new Sonido("Recursos/Sonidos/Musicas/.wav/03_Stage_Theme.wav");
             musica.comenzar();
@@ -210,33 +217,32 @@ public class Bomberman extends JGame implements ActionListener {
         if(MENU.getMostrando() == true){ //Para mostrar el Menu
             if(keyboard.isKeyPressed(KeyEvent.VK_ENTER)) {
                 MENU.setMostrando(false);
-                dAhora = new Date();
+                dAhora = new Date(); //En el momento que se preciona Entre comienza el Timer
                 dInit = dAhora;
             }
         }else{
             
-            movimientoHeroe(delta,keyboard);
-        
-            if (hero.getX()<658){ // para que no te siga hasta el infinito 
-                camara.seguirPersonaje(hero);
-            }
-
+            movimientoHeroe(delta,keyboard); //Controla movimientos
             if (!colisionHeroe()){
                 restriccion = "libre";
             }
 
-            if (retardo == false && (keyboard.isKeyPressed(KeyEvent.VK_SPACE))){
+            if (hero.getX()<658){ // Control de Camara
+                camara.seguirPersonaje(hero);
+            }
+
+            if (retardo == false && (keyboard.isKeyPressed(KeyEvent.VK_SPACE))){ 
                 soltarBomba();
             }
-            retraso();
+            retraso(); //Para controlar mejor soltarBombas()
             updateTimerBombas();
             explotarBombas();
-            colisionFlama();
+            colisionFlama(); //Controla que chocan las flamas
             
-            moverFantasmas(delta);
-            redireccionarFantasmas(delta);
+            moverFantasmas(delta); //Inicializa movimiento aleatorio para los fantasmas
+            redireccionarFantasmas(delta); 
 
-            if(DETONADOR == true){  
+            if(DETONADOR == true){  // CTRL para detonar Bombas
                 if(keyboard.isKeyPressed(KeyEvent.VK_CONTROL)){
                     detonarBombas();
                 }  
@@ -252,7 +258,7 @@ public class Bomberman extends JGame implements ActionListener {
                     stop(); //bucleJuego.jar
                 }               
             }
-            ///TIEMPO
+            ///Control Timer < 0 
             if(getTiempo()<0){
                 muerte();
             }
@@ -355,37 +361,7 @@ public class Bomberman extends JGame implements ActionListener {
             gameover.pack();
             gameover.setVisible(true);
         }
-    }
-    
-    public void detonarBombas(){
-        if(!vecBombas.isEmpty()){
-            for(int i=0;i<vecBombas.size();i++){
-                if(!vecBombas.elementAt(i).getExplotando()){
-                    vecBombas.elementAt(i).setExplotarAhora();
-                    vecBombas.elementAt(i).setTimer();
-                }
-            }
-        }
-    }
-      
-    public void updateTimerBombas(){
-        if(!vecBombas.isEmpty()){
-            for(int i=0;i<vecBombas.size();i++){
-                vecBombas.elementAt(i).updateTimer();
-            }
-        }
-    }
-    public void retraso(){    
-        if(vecBombas.isEmpty()){
-            retardo = false;
-        }else{
-            if(vecBombas.elementAt(vecBombas.size()-1).getTimer()>=1){
-                retardo = false;
-            }else{
-                retardo = true;
-            }
-        }   
-    }
+    }   
     public void muerte(){
         //puertaON=false;
         puerta.setPuertaON(false);
@@ -410,7 +386,7 @@ public class Bomberman extends JGame implements ActionListener {
             gameShutdown();
         }
     } 
-    
+    /////////////////////////////////////////////////COLICIONES/////////////////////////
     public void colisionFlama(){     
         if(!vecFlama.isEmpty()){
             for(int i=0; i<vecFlama.size();i++){
@@ -496,7 +472,7 @@ public class Bomberman extends JGame implements ActionListener {
         for(int i=0;i<vecBonus.size();i++){ // Heroe - Bonus
             if (hero.getPosicion().intersects(vecBonus.elementAt(i).getPosicion())){
                 if(vecBonus.elementAt(i).getClass().getName()=="BonusVelocidad"){
-                    vecBonus.elementAt(i).darBonus(this,hero);
+                    vecBonus.elementAt(i).darBonus(this);
                 }else{
                     vecBonus.elementAt(i).darBonus(this);
                 }
@@ -514,26 +490,7 @@ public class Bomberman extends JGame implements ActionListener {
         }
         return result;
     }
-
-    public void moverFantasmas(double delta){
-        for(int i=0;i<vecGhost.size();i++){
-            vecGhost.elementAt(i).update(delta);
-        }
-    }
-    public void redireccionarFantasmas(double delta){
-        for(int i=0;i<vecGhost.size();i++){
-            for(int j=0;j<vecParedes.size();j++){
-                if (vecGhost.elementAt(i).getPosicion().intersects(vecParedes.elementAt(j).getPosicion())){
-                    vecGhost.elementAt(i).direccionContraria(delta);
-                }
-            }
-            for(int j=0;j<vecBombas.size();j++){
-                if (vecGhost.elementAt(i).getPosicion().intersects(vecBombas.elementAt(j).getPosicion())){
-                    vecGhost.elementAt(i).direccionContraria(delta);
-                }
-            }
-        }
-    }  
+    ////////////////////////////////////////////////BLOQUES/////////////////////////////////
     public void BloquesDisponibles(){
         int bloque = 32;
         for (int i=32; i<30*bloque; i+=bloque){ //32
@@ -583,6 +540,7 @@ public class Bomberman extends JGame implements ActionListener {
             }
         }
     }
+    /////////////////////////////////////////////////////FANTASMAS//////////////////////////
     public void iniciarFantasmas(){
         int x=0;
         int y=0;
@@ -616,6 +574,37 @@ public class Bomberman extends JGame implements ActionListener {
             }
         }   
     }
+    public void moverFantasmas(double delta){
+        for(int i=0;i<vecGhost.size();i++){
+            vecGhost.elementAt(i).update(delta);
+        }
+    }
+    public void redireccionarFantasmas(double delta){
+        for(int i=0;i<vecGhost.size();i++){
+            for(int j=0;j<vecParedes.size();j++){
+                if (vecGhost.elementAt(i).getPosicion().intersects(vecParedes.elementAt(j).getPosicion())){
+                    vecGhost.elementAt(i).direccionContraria(delta);
+                }
+            }
+            for(int j=0;j<vecBombas.size();j++){
+                if (vecGhost.elementAt(i).getPosicion().intersects(vecBombas.elementAt(j).getPosicion())){
+                    vecGhost.elementAt(i).direccionContraria(delta);
+                }
+            }
+        }
+    } 
+    /////////////////////////////////////////////////BOMBAS//////////////////////////
+    public void retraso(){    
+        if(vecBombas.isEmpty()){
+            retardo = false;
+        }else{
+            if(vecBombas.elementAt(vecBombas.size()-1).getTimer()>=1){
+                retardo = false;
+            }else{
+                retardo = true;
+            }
+        }   
+    }
     public void soltarBomba(){   
         if (CANT_BOMBAS>=1){
             int x=0,y=0;
@@ -643,14 +632,30 @@ public class Bomberman extends JGame implements ActionListener {
             }
         }
     }
-    
+    public void detonarBombas(){
+        if(!vecBombas.isEmpty()){
+            for(int i=0;i<vecBombas.size();i++){
+                if(!vecBombas.elementAt(i).getExplotando()){
+                    vecBombas.elementAt(i).setExplotarAhora();
+                    vecBombas.elementAt(i).setTimer();
+                }
+            }
+        }
+    } 
+    public void updateTimerBombas(){
+        if(!vecBombas.isEmpty()){
+            for(int i=0;i<vecBombas.size();i++){
+                vecBombas.elementAt(i).updateTimer();
+            }
+        }
+    }
     public void explotarBombas(){
         if(!vecBombas.isEmpty()){
             for(int i=0;i<vecBombas.size();i++){ //recorro bombas en el campo
                 if(vecBombas.elementAt(i).getExplotarAhora()){ //Seteo las condiciones para que explote
                 }
                 if(!vecBombas.elementAt(i).getExplotando() && vecBombas.elementAt(i).getTimer()==3){ //Tiempo de explotar
-                    vecBombas.elementAt(i).explotar(vecFlama, this);
+                    vecBombas.elementAt(i).explotar(this);
                 }
                 if(vecBombas.elementAt(i).getTimer()>=4){ // 1 Segundos despues Frena 
                     vecBombas.remove(i); 
@@ -660,7 +665,6 @@ public class Bomberman extends JGame implements ActionListener {
             }
         }
     }
-
     public Vector<Bomba> cortarFlama(Vector<Bomba> vec){
         for(int j=0; j<vecParedes.size(); j++){ // j recorro paredes
             boolean flag = false;
@@ -674,7 +678,7 @@ public class Bomberman extends JGame implements ActionListener {
                             
                             //soltarBonus((int)vecParedes.elementAt(j).getX(),(int)vecParedes.elementAt(j).getY());
                             
-                            vecParedes.elementAt(j).soltarBonus(this,vecBonusRandom,vecBonus,puerta);
+                            vecParedes.elementAt(j).soltarBonus(this);
                            
                             vecParedes.remove(j); //Sacamos la pared de ladrillo del campo
                             while(k<vec.size()){ // ACA SE VE LA ANIMACION DEL LADRILLO
@@ -691,8 +695,8 @@ public class Bomberman extends JGame implements ActionListener {
         }
         return vec;
     }
-   
-    public void setearPropiedades(){ 
+    /////////////////////////////////////////////////////CONFIGURACIONES///////////////////////////////
+    private void setearPropiedades(){ 
         final Properties propiedades=new Properties(); 
         try { 
             propiedades.load(new FileInputStream("jgame.properties")); 
@@ -711,8 +715,117 @@ public class Bomberman extends JGame implements ActionListener {
             System.out.println("ERROR AL CARGAR PROPERTIES"); 
         } 
     }    
+
+   ///////////////////////////////////////////////////RANKING////////////////////////// 
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+        if(e.getActionCommand().equals("Aceptar")){
+            if(textField.getText().isEmpty()==false){
+                escribirRanking(textField.getText(), this.PUNTAJE, LEVEL);
+                mostrarRank(JtaRanking);
+                finJuego.detener();
+                resetValues();
+                gameStartup();
+            }
+        }
+    }
+    private void escribirRanking(String nombre, int puntaje, int nivel) {
+        String aux_nombre;
+        int aux_puntaje;
+        int aux_nivel;
+        String aux_fecha;
+        Calendar fecha=new GregorianCalendar();
+        String fecha_actual = fecha.get(Calendar.DAY_OF_MONTH)+"/"+(fecha.get(Calendar.MONTH)+1)+"/"+fecha.get(Calendar.YEAR);
+        boolean inserto=false;
+
+        try {
+            RandomAccessFile datos = new RandomAccessFile("ranking.txt", "rw");
+            datos.seek(0);
+            while(datos.readLine() != null){
+                lineas++;
+            }
+            datos.seek(0);
+            for(int i=0;i<lineas;i++){
+                String renglon=datos.readLine();
+                String palabras[]=renglon.split("-");
+                nombres[i]=palabras[0];
+                puntos[i]=Integer.parseInt(palabras[1]);
+                niveles[i]=Integer.parseInt(palabras[2]);
+                fechas[i]=palabras[3];
+            }
+            //INSERTAR ORDENADO Y ESCRIBIR
+            if(lineas==0){
+                nombres[0] = nombre;
+                puntos[0] = puntaje;
+                niveles[0] = nivel;
+                fechas[0] = fecha_actual;
+            }else{
+                if(puntaje>=puntos[lineas-1]){
+                    for(int i=0;i < lineas && inserto == false;i++){
+                        if(puntaje>=puntos[i]){
+                            aux_nombre = nombres[i];
+                            aux_puntaje = puntos[i];
+                            aux_nivel = niveles[i];
+                            aux_fecha = fechas[i];
+                            nombres[i] = nombre;
+                            puntos[i] = puntaje;
+                            niveles[i] = nivel;
+                            fechas[i] = fecha_actual;
+                            inserto = true;
+                            for(int j=lineas-1;j>i;j--){
+                                nombres[j]=nombres[j-1];
+                                puntos[j]=puntos[j-1];
+                                niveles[j]=niveles[j-1];
+                                fechas[j]=fechas[j-1];
+                            }
+                            nombres[i+1]=aux_nombre;
+                            puntos[i+1]=aux_puntaje;
+                            niveles[i+1]=aux_nivel;
+                            fechas[i+1]=aux_fecha;
+                        }
+                    }
+                    //AHORA QUE YA INSERTE TENGO QUE ESCRIBIR EL ARCHIVO
+                }else{
+                    if(lineas<10){
+                        nombres[lineas] = nombre;
+                        puntos[lineas] = puntaje;
+                        niveles[lineas] = nivel;
+                        fechas[lineas] = fecha_actual;
+                    }
+                    
+                }
+            }
+            datos.seek(0);
+            for(int i=0;i<10;i++){
+                if(nombres[i]!=null){
+                    datos.writeBytes(nombres[i]+"-");
+                    datos.writeBytes(puntos[i]+"-");
+                    datos.writeBytes(niveles[i]+"-");
+                    datos.writeBytes(fechas[i]+"\n");
+                }
+            }
+            datos.close();
+        } catch (Exception e) {
+            System.out.println("ERROR AL ESCRIBIR EL RANKING");
+            System.out.println(e);
+        }
+    }
+    public void mostrarRank(JTextArea jta){
+        int cont = 0;
+        String linea;
+        try {
+            RandomAccessFile datos = new RandomAccessFile("ranking.txt", "r");
+            while((linea = datos.readLine()) != null && cont<10){
+                jta.append(linea + "\n");
+                cont++;
+            }
+        }catch (Exception e) {}
+    }
+
+
+
     /// No la puedo pasar a Heroe.java porque este no es hijo de Jgame y no tiene los KeyEvent
-    public void movimientoHeroe(double delta, Keyboard keyboard) { 
+    private void movimientoHeroe(double delta, Keyboard keyboard) { 
         switch(restriccion){
             case "libre": 
                 if (keyboard.isKeyPressed(KeyEvent.VK_UP)){
@@ -909,110 +1022,5 @@ public class Bomberman extends JGame implements ActionListener {
                 }
             break;
         }
-    }
-    
-    public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
-        if(e.getActionCommand().equals("Aceptar")){
-            if(textField.getText().isEmpty()==false){
-                escribirRanking(textField.getText(), this.PUNTAJE, LEVEL);
-                mostrarRank(JtaRanking);
-                finJuego.detener();
-                resetValues();
-                gameStartup();
-            }
-        }
-    }
-    private void escribirRanking(String nombre, int puntaje, int nivel) {
-        String aux_nombre;
-        int aux_puntaje;
-        int aux_nivel;
-        String aux_fecha;
-        Calendar fecha=new GregorianCalendar();
-        String fecha_actual = fecha.get(Calendar.DAY_OF_MONTH)+"/"+(fecha.get(Calendar.MONTH)+1)+"/"+fecha.get(Calendar.YEAR);
-        boolean inserto=false;
-
-        try {
-            RandomAccessFile datos = new RandomAccessFile("ranking.txt", "rw");
-            datos.seek(0);
-            while(datos.readLine() != null){
-                lineas++;
-            }
-            datos.seek(0);
-            for(int i=0;i<lineas;i++){
-                String renglon=datos.readLine();
-                String palabras[]=renglon.split("-");
-                nombres[i]=palabras[0];
-                puntos[i]=Integer.parseInt(palabras[1]);
-                niveles[i]=Integer.parseInt(palabras[2]);
-                fechas[i]=palabras[3];
-            }
-            //INSERTAR ORDENADO Y ESCRIBIR
-            if(lineas==0){
-                nombres[0] = nombre;
-                puntos[0] = puntaje;
-                niveles[0] = nivel;
-                fechas[0] = fecha_actual;
-            }else{
-                if(puntaje>=puntos[lineas-1]){
-                    for(int i=0;i < lineas && inserto == false;i++){
-                        if(puntaje>=puntos[i]){
-                            aux_nombre = nombres[i];
-                            aux_puntaje = puntos[i];
-                            aux_nivel = niveles[i];
-                            aux_fecha = fechas[i];
-                            nombres[i] = nombre;
-                            puntos[i] = puntaje;
-                            niveles[i] = nivel;
-                            fechas[i] = fecha_actual;
-                            inserto = true;
-                            for(int j=lineas-1;j>i;j--){
-                                nombres[j]=nombres[j-1];
-                                puntos[j]=puntos[j-1];
-                                niveles[j]=niveles[j-1];
-                                fechas[j]=fechas[j-1];
-                            }
-                            nombres[i+1]=aux_nombre;
-                            puntos[i+1]=aux_puntaje;
-                            niveles[i+1]=aux_nivel;
-                            fechas[i+1]=aux_fecha;
-                        }
-                    }
-                    //AHORA QUE YA INSERTE TENGO QUE ESCRIBIR EL ARCHIVO
-                }else{
-                    if(lineas<10){
-                        nombres[lineas] = nombre;
-                        puntos[lineas] = puntaje;
-                        niveles[lineas] = nivel;
-                        fechas[lineas] = fecha_actual;
-                    }
-                    
-                }
-            }
-            datos.seek(0);
-            for(int i=0;i<10;i++){
-                if(nombres[i]!=null){
-                    datos.writeBytes(nombres[i]+"-");
-                    datos.writeBytes(puntos[i]+"-");
-                    datos.writeBytes(niveles[i]+"-");
-                    datos.writeBytes(fechas[i]+"\n");
-                }
-            }
-            datos.close();
-        } catch (Exception e) {
-            System.out.println("ERROR AL ESCRIBIR EL RANKING");
-            System.out.println(e);
-        }
-    }
-    public void mostrarRank(JTextArea jta){
-        int cont = 0;
-        String linea;
-        try {
-            RandomAccessFile datos = new RandomAccessFile("ranking.txt", "r");
-            while((linea = datos.readLine()) != null && cont<10){
-                jta.append(linea + "\n");
-                cont++;
-            }
-        }catch (Exception e) {}
     }
 }
