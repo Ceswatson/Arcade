@@ -171,14 +171,14 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
     cardLayout.show(imagenes, myList.getSelectedValue());
     if (myList.getSelectedValue() == "Bomberman"){
         BombermanFlag = true;
-        cargarpanel();
+        cargarRank();
       }else{
         BombermanFlag = false;
         area.setText("no hay datos");
       }  
   }
 
-  public void cargarpanel(){
+  public void cargarRank(){
     area.setText("");
     int cont = 0;
     String linea;
