@@ -11,6 +11,9 @@ public class Ranking {
     protected static int[] niveles=new int[10];
     protected static String[] fechas=new String[10];
     protected  int lineas=0;
+    
+    public Ranking(){
+    }
 
     public void escribirRanking(String nombre, int puntaje, int nivel) {
         String aux_nombre;

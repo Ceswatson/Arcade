@@ -11,7 +11,7 @@ public class Camara {
 	public void seguirPersonaje(Heroe obj){
 		this.x = -obj.getX()+resX/2;
 		if (this.x>0){
-				this.x=0;
+			this.x=0;
 		}
 	}
 	public void setViewPort(double x,double y){

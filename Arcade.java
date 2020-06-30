@@ -188,6 +188,7 @@ public class Arcade extends JPanel implements ActionListener,ListSelectionListen
         area.append(linea + "\n");
         cont++;
       }
+      datos.close();
     } catch (Exception e) {
       //TODO: handle exception
     }

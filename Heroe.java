@@ -1,18 +1,11 @@
 public class Heroe extends ObjetoGrafico implements ObjetoMovible {
 
-    private boolean muerto=false;
+    private boolean muerto=false; // Sin vidas!
     private double HEROE_DESPLAZAMIENTO=80.0;
     
     public Heroe() {
         super("Recursos/Imagenes/Heroe.png");
 	}
-
-    public void setX(final double x){
-        positionX=x;
-    }
-    public void setY(final double y){
-        positionY=y;
-    }
 
     public void setMuerte(boolean bool){
         muerto=bool;
@@ -31,7 +24,7 @@ public class Heroe extends ObjetoGrafico implements ObjetoMovible {
         HEROE_DESPLAZAMIENTO=80;
     }
 
-    public void update(double delta) {
+    public void update(double delta) { 
     }
     
 }

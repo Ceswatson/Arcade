@@ -10,13 +10,6 @@ public class Puerta extends ObjetoGrafico {
         super ("Recursos/Imagenes/Puerta.png");
     }
 
-    public void setImagen(final BufferedImage img){ 
-        this.imagen=img; 
-    } 
-    public void setPosition(int x,int y){
-		this.positionX = x;
-		this.positionY = y;
-    }
     public void setPuertaON(boolean bool){
         puertaOn = bool;
     }

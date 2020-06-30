@@ -30,7 +30,7 @@ public class Bomberman extends JGame implements ActionListener {
     private Fondo GAMEOVER;
     private Fondo MENU;
     private Fondo WIN;
-    private Vector<ObjetoGrafico> Objetos;
+    private Ranking Rank;
     private Vector<Fantasma> vecGhost;
     private Vector<Pared> vecParedes;
     private Vector<Pared> vecBloquesDisponibles;
@@ -50,7 +50,7 @@ public class Bomberman extends JGame implements ActionListener {
     private int LEVEL=1;
     private int PUNTAJE=0;
     private boolean DETONADOR=false;
-    private boolean saltoBomba = false;
+    private boolean SALTOBOMBA = false;
     //////////////////////////////////////
     private Camara camara; 
     private Sonido musica,boom,soltarbomb,caminata,bonus,muerte,finJuego,siguienteLevel;
@@ -67,10 +67,7 @@ public class Bomberman extends JGame implements ActionListener {
     private JButton boton;
     private JTextArea JtaRanking;
     private JScrollPane JspRanking;
-    ///////Ranking///////////////
-    Ranking Rank;
-    /////////////////////////////////////////
-    
+    private Properties propiedades;
     public Bomberman() {
         super("Bomberman", 640, 480);
         setearPropiedades(); 
@@ -82,7 +79,7 @@ public class Bomberman extends JGame implements ActionListener {
         long tiempoTranscurrido = dateDiff / 1000;
         return (TIMER - tiempoTranscurrido);
     }
-    public void setFlama(){
+    public void addFlama(){
         if(CANT_FLAMA<5){
             CANT_FLAMA++;
         }
@@ -90,12 +87,12 @@ public class Bomberman extends JGame implements ActionListener {
     public int getFlama(){
         return CANT_FLAMA;
     }
-    public void addBombas(){
+    public void addBomba(){
         if(CANT_BOMBAS<3){
             CANT_BOMBAS++;
         }
     }
-    public void setVidas(){
+    public void addVida(){
         if(CANT_VIDAS<5){
             CANT_VIDAS++;
         }
@@ -107,10 +104,10 @@ public class Bomberman extends JGame implements ActionListener {
         return DETONADOR;
     }
     public void setSaltoBomba(){
-        saltoBomba=true;
+        SALTOBOMBA=true;
     }
     public boolean getSaltoBomba(){
-        return saltoBomba;
+        return SALTOBOMBA;
     }
     public void nextLevel(){
         LEVEL++;
@@ -122,7 +119,7 @@ public class Bomberman extends JGame implements ActionListener {
         MENU.setMostrando(true);
         retardo = false;
         puerta.setPuertaON(false);
-        saltoBomba = false;
+        SALTOBOMBA = false;
         CANT_BOMBAS = 1;
         CANT_VIDAS = 3;
         CANT_FLAMA = 1;
@@ -149,7 +146,7 @@ public class Bomberman extends JGame implements ActionListener {
     }
 
     public void gameStartup() {
-        
+        Rank = new Ranking();
         dInit = new Date();
         camara = new Camara(0,0); //0,0
         camara.setRegionVisible(640, 448); //Ventana 640/480  448
@@ -205,9 +202,7 @@ public class Bomberman extends JGame implements ActionListener {
             musica.comenzar();
             musica.loop();
         }
-        Rank = new Ranking();
-    }
- 
+    } 
     public void gameUpdate(final double delta) {
         Keyboard keyboard = this.getKeyboard();
 
@@ -359,13 +354,14 @@ public class Bomberman extends JGame implements ActionListener {
             gameover.setVisible(true);
         }
     }   
+   
     public void muerte(){
         //puertaON=false;
         puerta.setPuertaON(false);
         CANT_VIDAS--; 
         CANT_BOMBAS=1;
         CANT_FLAMA=1;
-        saltoBomba=false;
+        SALTOBOMBA=false;
         hero.ResetVelocidad();
         if(flagMusica){
             musica.detener();
@@ -395,7 +391,7 @@ public class Bomberman extends JGame implements ActionListener {
                 for(int j=0;j<vecBonus.size();j++){ // Flama-Bonus/Puerta
                     if(vecBonus.elementAt(j).getPosicion().intersects(vecFlama.elementAt(i).getPosicion())){
                         vecBonus.removeElementAt(j);
-                        iniciarFantasmasAzules(5);
+                        iniciarFantasmasAzules(5);         
                     }
                 }
                 for(int j=0;j< vecGhost.size();j++){ // Flama-Fantasma
@@ -452,7 +448,7 @@ public class Bomberman extends JGame implements ActionListener {
                 result = true;
             }
         }
-        if(!saltoBomba){ //Bonus de salto de bombas
+        if(!SALTOBOMBA){ //Bonus de salto de bombas
             for(int i=0;i<vecBombas.size();i++){ //Heroe - Bomba (Obstaculo)
                 if(vecBombas.elementAt(i).getTimer()>1){
                     if (hero.getPosicion().intersects(vecBombas.elementAt(i).getPosicion())){
@@ -658,7 +654,7 @@ public class Bomberman extends JGame implements ActionListener {
                         boom.comenzar();
                     }
                 }
-                if(vecBombas.elementAt(i).getTimer()>=4){ // 1 Segundos despues Frena 
+                if(vecBombas.elementAt(i).getTimer()>=4){ // 1 Segundo despues Frena 
                     vecBombas.remove(i); 
                     CANT_BOMBAS++;
                     vecFlama.clear();
@@ -676,8 +672,6 @@ public class Bomberman extends JGame implements ActionListener {
                         flag=true;
                         freno=true;
                         if(vecParedes.elementAt(j).getClass().getName() == "ParedLadrillo"){ //choco pared ladrillo
-                            
-                            //soltarBonus((int)vecParedes.elementAt(j).getX(),(int)vecParedes.elementAt(j).getY());
                             
                             vecParedes.elementAt(j).soltarBonus(this);
                            
@@ -698,7 +692,7 @@ public class Bomberman extends JGame implements ActionListener {
     }
     /////////////////////////////////////////////////////CONFIGURACIONES///////////////////////////////
     private void setearPropiedades(){ 
-        final Properties propiedades=new Properties(); 
+        propiedades=new Properties(); 
         try { 
             propiedades.load(new FileInputStream("jgame.properties")); 
             // musica 
@@ -724,7 +718,9 @@ public class Bomberman extends JGame implements ActionListener {
             if(textField.getText().isEmpty()==false){
                 Rank.escribirRanking(textField.getText(), this.PUNTAJE, LEVEL);
                 Rank.mostrarRank(JtaRanking);
-                finJuego.detener();
+                if(flagMusica){
+                    finJuego.detener();
+                }
                 resetValues();
                 gameStartup();
             }

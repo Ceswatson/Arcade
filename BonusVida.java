@@ -19,8 +19,7 @@ public class BonusVida extends Bonus{
     }
     
     public void darBonus(Bomberman bomberman){
-        bomberman.setVidas();
+        bomberman.addVida();
         bomberman.addPuntos(puntos);
-
     }
 }

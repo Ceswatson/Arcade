@@ -18,7 +18,7 @@ public class BonusBomba extends Bonus {
 		this.positionY = y;
 	}
     public void darBonus(Bomberman bomberman){
-        bomberman.addBombas();
+        bomberman.addBomba();
         bomberman.addPuntos(puntos);
     }
 }

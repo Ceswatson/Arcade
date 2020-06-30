@@ -7,9 +7,9 @@ import java.io.*;
 
 public class ObjetoGrafico {
 	protected BufferedImage imagen = null;
-	int puntos=0;
-	double positionX = 0;
-	double positionY = 0;
+	protected int puntos=0;
+	protected double positionX = 0;
+	protected double positionY = 0;
 	
     public ObjetoGrafico(String filename) {
 		try{
@@ -19,10 +19,10 @@ public class ObjetoGrafico {
 		}
     }
 
-	public int getWidth(){
-		return imagen.getWidth();
-	}
-	public int getHeight(){
+	 public int getWidth(){
+	 	return imagen.getWidth();
+	 }
+	 public int getHeight(){
 
 		return imagen.getHeight();
 	}
@@ -35,11 +35,12 @@ public class ObjetoGrafico {
 		this.positionX = x;
 		this.positionY = y;
 	}
-
-   	public void display(Graphics2D g2) {
-		g2.drawImage(this.imagen,(int) this.positionX,(int) this.positionY,null);
-   	}
-
+	public void setX(final double x) {
+        this.positionX = x;
+    }
+	public void setY(final double y) {
+        this.positionY = y;
+	}
 	public double getX(){
 		return positionX;
 	}
@@ -48,8 +49,15 @@ public class ObjetoGrafico {
 		return positionY;
 	}
 	
+
+   	public void display(Graphics2D g2) {
+		g2.drawImage(this.imagen,(int) this.positionX,(int) this.positionY,null);
+   	}
+
+	
 	//Para las colisiones --- se pide un cuadrado en la posicion donde se cuentra el objeto
 	public Rectangle2D getPosicion(){
         return new Rectangle2D.Double(positionX, positionY,30,30);
 	}
+
 }

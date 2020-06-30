@@ -4,5 +4,7 @@ public abstract class Bonus extends ObjetoGrafico {
         super(filename);
     }
 	public void darBonus(Bomberman bomberman) {
+
     }
+    
 }

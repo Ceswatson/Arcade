@@ -18,7 +18,7 @@ public class BonusFlama extends Bonus {
 	}
 
     public void darBonus(Bomberman bomberman){
-        bomberman.setFlama();
+        bomberman.addFlama();
         bomberman.addPuntos(puntos);
     }
 
